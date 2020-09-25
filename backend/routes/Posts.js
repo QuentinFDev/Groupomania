@@ -6,15 +6,16 @@ const multer = require('../middleware/multer-config')
 
 
 router.post('/', auth, (req, res, next) => {
-    console.log(req.body["content-type"]);
+    console.log(req.user);
     const today = new Date()
     const postData = {
-      post: req.form,
+      post: req.body.form,
       created: today,
-      createdby: req.createdby,
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      createdby: req.body.createdby,
+      letterUserPost: req.body.letterUserPost,
+      //imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.filename}`
     }
-    console.log(postData);
+    console.log(postData.letterUserPost);
     Post.create(postData)
         .then(() => res.status(201).json({message: "Post enregistré !", data: postData}))
         .catch( error => res.status(400).json({error}))

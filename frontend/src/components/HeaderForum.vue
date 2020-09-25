@@ -1,7 +1,7 @@
 <template>
     <div class="header-forum">
         <div class="header-bar">
-            <div class="rounduser"><p class="letteruser">Q</p></div>
+            <div class="rounduser"><p class="letteruser" v-bind="letteruser()">{{letterUser}}</p></div>
             <input class="search-bar" type="text" placeholder="Rechercher..." id="search" name="search"/>
             <div class="menu-burger" @click="menu()">
                 <i class="fas fa-bars fa-4x"></i>
@@ -22,9 +22,10 @@
 export default {
   name: 'HeaderForum',
   data() {
-      return {
-          menuopen:false,
-      }
+    return {
+        menuopen:false,
+        letterUser: null
+    }
   },
   methods:{
       menu(){
@@ -39,6 +40,10 @@ export default {
       logout(){
           localStorage.clear()
           this.$router.push('/')
+      },
+      letteruser(){
+          const name = localStorage.getItem('Name')
+          this.letterUser = name.substr(0, 1)
       }
   },
 }
@@ -76,6 +81,7 @@ $clrtextsearch : #928f8f;
         .letteruser{
             color: white;
             font-size: 4vw;
+            text-transform: uppercase;
         }
     }
     input{

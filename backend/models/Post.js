@@ -21,6 +21,9 @@ module.exports = db.sequelize.define(
     created: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW
+    },
+    letterUserPost: {
+      type: Sequelize.STRING
     }
   },
   {

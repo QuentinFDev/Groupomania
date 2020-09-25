@@ -2,7 +2,7 @@
     <div>
         <div class="post" v-for="post in posts.slice().reverse()" :key="post.id">
             <div class="headerpost">
-                <div class="userpost"><p class="letteruser">{{post.id}}</p></div>
+                <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
                 <div class="postdata">
                     <h3>{{post.createdby}}</h3>
                     <p>{{post.created}}</p>
@@ -17,7 +17,7 @@
             <div class="footerpost">
                 <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment" @keypress="fetchComment"/>
                 <i class="fa-heart fa-3x"
-                v-bind:class="{far: isActive, 'fas': isLike}" @click="like"></i>
+                v-bind:class="{far: isActive, 'fas': isLike}" @click="like()"></i>
             </div>
         </div>
     </div>
@@ -35,11 +35,11 @@ export default {
     data(){
         return{
             posts : [],
-            letteruser: null,
             comments: [],
             comment: '',
             isActive: true,
-            isLike: false
+            isLike: false,
+
         }
     },
     methods : {
@@ -50,11 +50,6 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.posts = posts.data
-            console.log(posts.data)
-        },
-        firstLetter(){
-            const name = localStorage.getItem('Name')
-            this.letteruser = name
         },
         async fetchComment(e){
             if(e.key == 'Enter') {
@@ -72,7 +67,7 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.comments = comments.data
-            console.log(comments.data)
+            console.log(this.posts)
         },
         like(){
             this.isActive = false,
@@ -119,6 +114,7 @@ $clrfooterpost : #c4c4c4;
             .letteruser{
                 color: white;
                 font-size: 4vw;
+                text-transform: uppercase;
             }
         }
         .postdata{
@@ -165,9 +161,6 @@ $clrfooterpost : #c4c4c4;
         .fa-3x{
             padding-right: 20%;
             cursor: pointer;
-            &:hover{
-                scale: 0.9;
-            }
         }
 
     }
