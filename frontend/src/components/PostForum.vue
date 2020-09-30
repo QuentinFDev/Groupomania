@@ -10,10 +10,15 @@
             </div>
             <p class="textpost">{{post.post}}</p>
             <img :src="post.imageUrl" alt="">
+            <div class="postComments" v-if="post.id == comment.postId">
             <h2>commentaires</h2>
                 <div v-for="comment in comments.slice().reverse()" :key="comment.id">
                     <p>{{comment.createdby}} dit: {{comment.comment}} le: {{comment.created}} pour le post n°{{comment.postId}}</p>
                 </div>
+            </div>
+            <div class="noComments" v-else>
+                <h2>Pas de commentaires pour ce post</h2>
+            </div>
             <div class="footerpost">
                 <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
                 <i class="fa-heart fa-3x"
@@ -39,7 +44,6 @@ export default {
             comment: {},
             isActive: false,
             isLike: true,
-
         }
     },
     methods : {
