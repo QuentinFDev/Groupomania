@@ -8,9 +8,11 @@
                     <p>{{post.created}}</p>
                 </div>
             </div>
-            <p class="textpost">{{post.post}}</p>
-            <img :src="post.imageUrl" alt="">
-            <h2>commentaires: </h2>
+            <div class="corpspost">
+                <p class="textpost">{{post.post}}</p>
+                <img :src="post.imageUrl" alt="">
+                <h2>commentaires: </h2>
+            </div>
             <div class="postComments" v-for="comment in comments.slice().reverse()" :key="comment.id">
                 <div v-if="post.id == comment.postId">
                     <h3>{{comment.createdby}} le <i>{{comment.created}}</i></h3>
@@ -20,7 +22,7 @@
             <div class="footerpost">
                 <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
                 <i class="fa-heart fa-3x"
-                v-bind:class="{far: isActive, 'fas': isLike}" @click="like()"></i>
+                v-bind:class="{far: isActive, 'fas': isLike}" @click="like"></i>
             </div>
         </div>
     </div>
@@ -40,8 +42,8 @@ export default {
             posts : [],
             comments: [],
             comment: {},
-            isActive: false,
-            isLike: true,
+            isActive: true,
+            isLike: false,
         }
     },
     methods : {
@@ -71,9 +73,9 @@ export default {
             }})
             this.comments = comments.data
         },
-        like(){
-            this.isActive = false,
-            this.isLike = true
+        like(e){
+            e.isActive = false,
+            e.isLike = true
         },
     },
     mounted(){
@@ -125,12 +127,14 @@ $clrfooterpost : #c4c4c4;
             text-align: start;
         }
     }
-    .textpost{
+    .corpspost{
+        .textpost{
         text-align: start;
         margin: 4%;
         font-size: 1.6em;
         white-space: pre-wrap;
         word-wrap: break-word;
+        }
     }
     .postComments{
         text-align: left;
