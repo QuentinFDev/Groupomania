@@ -5,7 +5,7 @@ const auth = require('../middleware/auth')
 const multer = require('../middleware/multer-config')
 
 
-router.post('/', auth, (req, res, next) => {
+router.post('/', auth, multer, (req, res, next) => {
     console.log(req.user);
     const today = new Date()
     const postData = {
@@ -13,7 +13,7 @@ router.post('/', auth, (req, res, next) => {
       created: today,
       createdby: req.body.createdby,
       letterUserPost: req.body.letterUserPost,
-      //imageUrl: `${req.protocol}://${req.get('host')}/images/${req.body.filename}`
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     }
     console.log(postData.letterUserPost);
     Post.create(postData)

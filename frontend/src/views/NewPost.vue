@@ -45,30 +45,30 @@ export default {
             this.newpost.file = this.$refs.file.files[0]  
         },
         postForm(e){
-            //let formData = new FormData()
-            //formData.append('form', this.newpost.form)
-            //formData.append('createdby', this.newpost.createdby)
-            //formData.append('file', this.newpost.file, this.newpost.file.filename)
+            let formData = new FormData()
+            formData.append('form', this.newpost.form)
+            formData.append('createdby', this.newpost.createdby)
+            formData.append('letterUserPost', this.newpost.letterUserPost)
+            formData.append('file', this.newpost.file)
             if(this.newpost.form != null){
-            this.axios.post('http://localhost:5000/posts', this.newpost, {headers:
-            {
-            /*'Content-Type': 'multipart/form-data',*/
-            'Authorization' : 'Bearer ' + localStorage.getItem('token'),
-            },
-            'Name' : localStorage.getItem('Name')
-            })
-            .then((result) =>{
-                if(result.data.error !=undefined) {
-                    console.log("result", result.data.error)
-                }
-                else {
-                    this.$router.push('forum')
-                }
-            })
-        }
-        else{
-            alert("Vous n'aviez rien écris !")
-        }
+                this.axios.post('http://localhost:5000/posts', /*this.newpost,*/ formData, {headers:
+                    {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token'),
+                    },
+                })
+                .then((result) =>{
+                    if(result.data.error !=undefined) {
+                        console.log("result", result.data.error)
+                    }
+                    else {
+                        this.$router.push('forum')
+                    }
+                })
+            }
+            else{
+                alert("Vous n'aviez rien écris !")
+            }
         console.log(this.newpost);
         e.preventDefault();
         },

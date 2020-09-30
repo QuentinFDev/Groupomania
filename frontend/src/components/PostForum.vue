@@ -9,13 +9,13 @@
                 </div>
             </div>
             <p class="textpost">{{post.post}}</p>
-            <p>{{post.imageUrl}}</p>
+            <img :src="post.imageUrl" alt="">
             <h2>commentaires</h2>
                 <div v-for="comment in comments.slice().reverse()" :key="comment.id">
-                    <p>{{comment.createdby}} dit: {{comment.comment}} le: {{comment.created}}</p>
+                    <p>{{comment.createdby}} dit: {{comment.comment}} le: {{comment.created}} pour le post n°{{comment.postId}}</p>
                 </div>
             <div class="footerpost">
-                <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment" @keypress="fetchComment"/>
+                <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
                 <i class="fa-heart fa-3x"
                 v-bind:class="{far: isActive, 'fas': isLike}" @click="like()"></i>
             </div>
@@ -36,9 +36,9 @@ export default {
         return{
             posts : [],
             comments: [],
-            comment: '',
-            isActive: true,
-            isLike: false,
+            comment: {},
+            isActive: false,
+            isLike: true,
 
         }
     },
@@ -51,10 +51,11 @@ export default {
             }})
             this.posts = posts.data
         },
-        async fetchComment(e){
+        async fetchComment(postId, e){
             if(e.key == 'Enter') {
                 await axios.post('http://localhost:5000/posts/comments', {
-                    content: this.comment,
+                    content: this.comment[postId],
+                    postId : postId,
                     name: localStorage.getItem('Name'),
                 })
                 location.reload()
@@ -67,7 +68,6 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.comments = comments.data
-            console.log(this.posts)
         },
         like(){
             this.isActive = false,
