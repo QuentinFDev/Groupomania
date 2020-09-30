@@ -10,14 +10,12 @@
             </div>
             <p class="textpost">{{post.post}}</p>
             <img :src="post.imageUrl" alt="">
-            <div class="postComments" v-if="post.id == comment.postId">
-            <h2>commentaires</h2>
-                <div v-for="comment in comments.slice().reverse()" :key="comment.id">
-                    <p>{{comment.createdby}} dit: {{comment.comment}} le: {{comment.created}} pour le post n°{{comment.postId}}</p>
+            <h2>commentaires: </h2>
+            <div class="postComments" v-for="comment in comments.slice().reverse()" :key="comment.id">
+                <div v-if="post.id == comment.postId">
+                    <h3>{{comment.createdby}} le <i>{{comment.created}}</i></h3>
+                    <p>{{comment.comment}}</p>
                 </div>
-            </div>
-            <div class="noComments" v-else>
-                <h2>Pas de commentaires pour ce post</h2>
             </div>
             <div class="footerpost">
                 <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
@@ -134,13 +132,23 @@ $clrfooterpost : #c4c4c4;
         white-space: pre-wrap;
         word-wrap: break-word;
     }
-    .mediapost{
-        max-width: 100%;
-        max-height: 100%;
+    .postComments{
+        text-align: left;
+        padding-left: 2%;
+        margin: 1%;
+        background: $clrprimaire;
+        border-radius: 25px;
+        h3{
+            padding-top: 1%;
+        }
+        p{
+            font-size: 1.2em;
+            padding-bottom: 1%;
+        }
     }
     .footerpost{
         background: $clrfooterpost;
-        height: 5vw;
+        height: 3vw;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -151,7 +159,7 @@ $clrfooterpost : #c4c4c4;
             width: 60%;
             height: 75%;
             background-color: $clrlogos;
-            font-size: 4vh;
+            font-size: 2vh;
             border-radius: 30px;
             border: 0px;
             text-shadow: 2px 2px #e6e6e6;
