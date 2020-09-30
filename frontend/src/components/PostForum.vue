@@ -2,20 +2,25 @@
     <div>
         <div class="post" v-for="post in posts.slice().reverse()" :key="post.id">
             <div class="headerpost">
-                <div class="userpost"><p class="letteruser">{{post.id}}</p></div>
+                <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
                 <div class="postdata">
                     <h3>{{post.createdby}}</h3>
                     <p>{{post.created}}</p>
                 </div>
             </div>
-            <p class="textpost">{{post.post}}</p>
-            <p>{{post.imageUrl}}</p>
-            <h2>commentaires</h2>
-                <div v-for="comment in comments.slice().reverse()" :key="comment.id">
-                    <p>{{comment.createdby}} dit: {{comment.comment}} le: {{comment.created}}</p>
+            <div class="corpspost">
+                <p class="textpost">{{post.post}}</p>
+                <img :src="post.imageUrl" alt="">
+                <h2>commentaires: </h2>
+            </div>
+            <div class="postComments" v-for="comment in comments.slice().reverse()" :key="comment.id">
+                <div v-if="post.id == comment.postId">
+                    <h3>{{comment.createdby}} le <i>{{comment.created}}</i></h3>
+                    <p>{{comment.comment}}</p>
                 </div>
+            </div>
             <div class="footerpost">
-                <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment" @keypress="fetchComment"/>
+                <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
                 <i class="fa-heart fa-3x"
                 v-bind:class="{far: isActive, 'fas': isLike}" @click="like"></i>
             </div>
@@ -35,11 +40,10 @@ export default {
     data(){
         return{
             posts : [],
-            letteruser: null,
             comments: [],
-            comment: '',
+            comment: {},
             isActive: true,
-            isLike: false
+            isLike: false,
         }
     },
     methods : {
@@ -50,16 +54,12 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.posts = posts.data
-            console.log(posts.data)
         },
-        firstLetter(){
-            const name = localStorage.getItem('Name')
-            this.letteruser = name
-        },
-        async fetchComment(e){
+        async fetchComment(postId, e){
             if(e.key == 'Enter') {
                 await axios.post('http://localhost:5000/posts/comments', {
-                    content: this.comment,
+                    content: this.comment[postId],
+                    postId : postId,
                     name: localStorage.getItem('Name'),
                 })
                 location.reload()
@@ -72,11 +72,10 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.comments = comments.data
-            console.log(comments.data)
         },
-        like(){
-            this.isActive = false,
-            this.isLike = true
+        like(e){
+            e.isActive = false,
+            e.isLike = true
         },
     },
     mounted(){
@@ -119,6 +118,7 @@ $clrfooterpost : #c4c4c4;
             .letteruser{
                 color: white;
                 font-size: 4vw;
+                text-transform: uppercase;
             }
         }
         .postdata{
@@ -127,20 +127,32 @@ $clrfooterpost : #c4c4c4;
             text-align: start;
         }
     }
-    .textpost{
+    .corpspost{
+        .textpost{
         text-align: start;
         margin: 4%;
         font-size: 1.6em;
         white-space: pre-wrap;
         word-wrap: break-word;
+        }
     }
-    .mediapost{
-        max-width: 100%;
-        max-height: 100%;
+    .postComments{
+        text-align: left;
+        padding-left: 2%;
+        margin: 1%;
+        background: $clrprimaire;
+        border-radius: 25px;
+        h3{
+            padding-top: 1%;
+        }
+        p{
+            font-size: 1.2em;
+            padding-bottom: 1%;
+        }
     }
     .footerpost{
         background: $clrfooterpost;
-        height: 5vw;
+        height: 3vw;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -151,7 +163,7 @@ $clrfooterpost : #c4c4c4;
             width: 60%;
             height: 75%;
             background-color: $clrlogos;
-            font-size: 4vh;
+            font-size: 2vh;
             border-radius: 30px;
             border: 0px;
             text-shadow: 2px 2px #e6e6e6;
@@ -165,9 +177,6 @@ $clrfooterpost : #c4c4c4;
         .fa-3x{
             padding-right: 20%;
             cursor: pointer;
-            &:hover{
-                scale: 0.9;
-            }
         }
 
     }
