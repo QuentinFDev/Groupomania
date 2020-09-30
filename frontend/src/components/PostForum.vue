@@ -21,8 +21,6 @@
             </div>
             <div class="footerpost">
                 <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
-                <i class="fa-heart fa-3x"
-                v-bind:class="{far: isActive, 'fas': isLike}" @click="like"></i>
             </div>
         </div>
     </div>
@@ -42,8 +40,6 @@ export default {
             posts : [],
             comments: [],
             comment: {},
-            isActive: true,
-            isLike: false,
         }
     },
     methods : {
@@ -54,6 +50,7 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.posts = posts.data
+            console.log(posts.data);
         },
         async fetchComment(postId, e){
             if(e.key == 'Enter') {
@@ -72,10 +69,6 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.comments = comments.data
-        },
-        like(e){
-            e.isActive = false,
-            e.isLike = true
         },
     },
     mounted(){
@@ -163,22 +156,21 @@ $clrfooterpost : #c4c4c4;
             width: 60%;
             height: 75%;
             background-color: $clrlogos;
-            font-size: 2vh;
+            font-size: 1.7vw;
             border-radius: 30px;
             border: 0px;
             text-shadow: 2px 2px #e6e6e6;
             color: black;
-            
             &:hover{
                 color: black;
                 text-shadow: none;
             }
         }
-        .fa-3x{
-            padding-right: 20%;
-            cursor: pointer;
+        .btn{
+            width: 25%;
+            height: 50%;
+            margin-right: 10%;
         }
-
     }
 }
 
