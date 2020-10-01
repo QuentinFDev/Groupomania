@@ -21,6 +21,9 @@
             </div>
             <div class="footerpost">
                 <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
+                <div class="like" @click="onLike(post.id)">
+                    <i class="fa-heart fa-3x far" style="margin-right: 10%; cursor: pointer;"></i>
+                </div>
             </div>
         </div>
     </div>
@@ -39,7 +42,9 @@ export default {
         return{
             posts : [],
             comments: [],
+            likes:[],
             comment: {},
+            like: {},
         }
     },
     methods : {
@@ -69,6 +74,13 @@ export default {
                 'Name' : localStorage.getItem('Name')
             }})
             this.comments = comments.data
+        },
+        onLike(postId) {
+            axios.post('http://localhost:5000/posts/likes', {
+                postId : postId,
+                userId : localStorage.getItem('UserId'),
+                name: localStorage.getItem('Name'),
+            })
         },
     },
     mounted(){
@@ -166,9 +178,7 @@ $clrfooterpost : #c4c4c4;
                 text-shadow: none;
             }
         }
-        .btn{
-            width: 25%;
-            height: 50%;
+        .like{
             margin-right: 10%;
         }
     }
@@ -212,9 +222,6 @@ $clrfooterpost : #c4c4c4;
             .comment{
                 width: 70%;
                 font-size: 5vw;
-            } 
-            .fa-3x{
-            padding-right: 10%;
             }           
         }
     }
@@ -230,9 +237,6 @@ $clrfooterpost : #c4c4c4;
         }
         .footerpost{
             height: 14vw; 
-            .fa-3x{
-                padding-right: 5%;
-            }
         }
     }
 }

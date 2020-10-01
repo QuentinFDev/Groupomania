@@ -5,12 +5,7 @@
             <div class="form-group">
                 <textarea class="form-control" placeholder="Ecrivez-ici..." id="description" v-model="newpost.form"></textarea>
                 <label for="file" class="label">Upload File</label>
-                <input 
-                    type="file"
-                    accept="image/*"
-                    ref="file" 
-                    @change="selectFile"
-                />
+                <input type="file" accept="image/*" ref="file" @change="selectFile"/>
             </div>
             <button class="submit" type="submit">Publier</button>
         </form>

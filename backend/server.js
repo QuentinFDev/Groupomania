@@ -31,6 +31,7 @@ app.use("/posts", Posts)
 var Comments = require ('./routes/Comments')
 app.use("/posts", Comments)
 
+
 app.use('/images', express.static(path.join(__dirname, 'images')))
 
 
