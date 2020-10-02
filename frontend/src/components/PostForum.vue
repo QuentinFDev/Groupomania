@@ -2,10 +2,16 @@
     <div>
         <div class="post" v-for="post in posts.slice().reverse()" :key="post.id">
             <div class="headerpost">
-                <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
-                <div class="postdata">
-                    <h3>{{post.createdby}}</h3>
-                    <p>{{post.created}}</p>
+                <div class="data-post">
+                    <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
+                    <div class="postdata">
+                        <h3>{{post.createdby}}</h3>
+                        <p>{{post.created}}</p>
+                    </div>
+                </div>
+                <div class="options" v-if="post.createdby == userName">
+                    <button class="btn modifyPost">Modifier</button>
+                    <button class="btn removePost">Supprimer</button>
                 </div>
             </div>
             <div class="corpspost">
@@ -45,6 +51,8 @@ export default {
             likes:[],
             comment: {},
             like: {},
+            userId: localStorage.getItem('UserId'),
+            userName: localStorage.getItem('Name'),
         }
     },
     methods : {
@@ -110,26 +118,59 @@ $clrfooterpost : #c4c4c4;
     margin: 2%;
     .headerpost{
         display: flex;
-        margin: 2vw 0 2vw 2vw;
         align-items: center;
-        .userpost{
-        width: 6vw;
-        height: 6vw;
-        border-radius: 100px;
-        background-color: $clrlogos;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-            .letteruser{
-                color: white;
-                font-size: 4vw;
-                text-transform: uppercase;
+        justify-content: space-between;
+        margin: 2%;
+        .data-post{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            .userpost{
+                width: 6vw;
+                height: 6vw;
+                border-radius: 100px;
+                background-color: $clrlogos;
+                .letteruser{
+                    color: white;
+                    font-size: 4vw;
+                    text-transform: uppercase;
+                }
+            }
+            .postdata{
+                margin-left: 1vw;
+                color: black;
+                text-align: start;
             }
         }
-        .postdata{
-            margin-left: 1vw;
-            color: black;
-            text-align: start;
+        .options{
+
+            .btn{
+                appearance: none;
+                background: none;
+                border: none;
+                outline: none;
+                cursor: pointer;
+
+                padding: 10px 20px;
+                border-radius: 4px;
+                color: #FE4880;
+                font-size: 14px;
+                font-weight: 600;
+                margin: 0 15px;
+                transition: 0.4s;
+                border: 3px solid #FE4880;
+                background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
+                background-size: 200%;
+                background-position: 0%;
+                &:hover{
+                    color: #FFF;
+                    background-position: 100%;
+                }
+                &:active{
+                    scale: 0.95;
+                }
+            }
         }
     }
     .corpspost{
