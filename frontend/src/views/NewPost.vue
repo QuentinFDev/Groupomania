@@ -5,12 +5,7 @@
             <div class="form-group">
                 <textarea class="form-control" placeholder="Ecrivez-ici..." id="description" v-model="newpost.form"></textarea>
                 <label for="file" class="label">Upload File</label>
-                <input 
-                    type="file"
-                    accept="image/*"
-                    ref="file" 
-                    @change="selectFile"
-                />
+                <input type="file" accept="image/*" ref="file" @change="selectFile"/>
             </div>
             <button class="submit" type="submit">Publier</button>
         </form>
@@ -51,7 +46,7 @@ export default {
             formData.append('letterUserPost', this.newpost.letterUserPost)
             formData.append('file', this.newpost.file)
             if(this.newpost.form != null){
-                this.axios.post('http://localhost:5000/posts', /*this.newpost,*/ formData, {headers:
+                this.axios.post('http://localhost:5000/posts', formData, {headers:
                     {
                     'Content-Type': 'multipart/form-data',
                     'Authorization' : 'Bearer ' + localStorage.getItem('token'),

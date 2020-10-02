@@ -24,6 +24,12 @@ module.exports = db.sequelize.define(
     },
     letterUserPost: {
       type: Sequelize.STRING
+    },
+    likes: {
+      type: Sequelize.NUMBER
+    },
+    usersLiked: {
+      type: Sequelize.STRING
     }
   },
   {
