@@ -10,8 +10,8 @@
                     </div>
                 </div>
                 <div class="options" v-if="post.createdby == userName">
-                    <button class="btn modifyPost">Modifier</button>
-                    <button class="btn removePost">Supprimer</button>
+                    <button class="btn modifyPost" @click="modifyPost(post)">Modifier</button>
+                    <button class="btn removePost" @click="removePost(post.id)">Supprimer</button>
                 </div>
             </div>
             <div class="corpspost">
@@ -48,14 +48,13 @@ export default {
         return{
             posts : [],
             comments: [],
-            likes:[],
             comment: {},
-            like: {},
             userId: localStorage.getItem('UserId'),
             userName: localStorage.getItem('Name'),
         }
     },
     methods : {
+        //Récuperer tous les posts
         async fetchPosts() {
             const posts = await axios.get('http://localhost:5000/posts', {headers:
             {
@@ -65,8 +64,9 @@ export default {
             this.posts = posts.data
             console.log(posts.data);
         },
+        //Poster un commentaire
         async fetchComment(postId, e){
-            if(e.key == 'Enter') {
+            if(e.key == 'Enter' && this.comment[postId] != null) {
                 await axios.post('http://localhost:5000/posts/comments', {
                     content: this.comment[postId],
                     postId : postId,
@@ -75,6 +75,7 @@ export default {
                 location.reload()
             }
         },
+        //Récuperer tous les commentaires
         async fetchComments() {
             const comments = await axios.get('http://localhost:5000/posts/comments', {headers:
             {
@@ -83,13 +84,40 @@ export default {
             }})
             this.comments = comments.data
         },
-        onLike(postId) {
-            axios.post('http://localhost:5000/posts/likes', {
-                postId : postId,
-                userId : localStorage.getItem('UserId'),
-                name: localStorage.getItem('Name'),
-            })
+        //Liker un post
+        async onLike(postId) {
+            await axios.put('http://localhost:5000/posts/' + postId, {headers:
+            {
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+            }})
+            location.reload()
         },
+        //Supprimer un post et les commentaires du post
+        async removePost(postId) {
+            await axios.delete('http://localhost:5000/posts/' + postId, {headers:
+            {
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+            }})
+            await axios.delete('http://localhost:5000/posts/comments/' + postId, {headers:
+            {
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+            }})
+            location.reload()
+        },
+        //Modifier un post
+        async modifyPost(post){
+            await axios.put('http://localhost:5000/posts/' + post.id, 
+            {
+                imageUrl : post.imageUrl,
+                post : post.post
+            },
+            {headers:
+                {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }}
+            ),
+            document.location.href="http://localhost:8080/post"
+        }
     },
     mounted(){
         this.fetchPosts()

@@ -32,11 +32,44 @@ router.post('/', auth, multer, (req, res, next) => {
     }
 })
 
-router.post('/likes', (req, res, next) => {
-    Post.update(
-        {userLiked: req.body.name},
-    )
-    .then(() => res.status(201).json({message: "Like enregistré !", data: postData}))
+router.delete('/:id', auth, (req, res, next) => {
+        Post.destroy({
+            where: {
+                id : req.params.id
+            }
+        })
+        .then(() => res.status(201).json({message: "Post supprimé !"}))
+        .catch( error => res.status(400).json({error}))
+})
+
+/*
+router.put('/:id', auth, multer, (req, res, next) => {
+    const PostObject = req.file ?
+    {
+      ...JSON.parse(req.body.post),
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body };
+    Post.updateOne({ 
+        where: {
+            id: req.params.id
+        },
+        data: {
+            imageUrl : req.body.imageUrl,
+            post : req.body.post
+        }
+    })
+    .then(() => res.status(200).json({ message: 'Post modifiée !'}))
+    .catch(error => res.status(400).json({ error }))
+})
+*/
+
+router.put('/:id', auth, (req, res, next) => {
+    Post.save({
+        where: {
+            id : req.params.id
+        }
+    })
+    .then(() => res.status(201).json({message: "Post supprimé !"}))
     .catch( error => res.status(400).json({error}))
 })
 
