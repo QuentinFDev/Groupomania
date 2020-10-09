@@ -5,9 +5,10 @@ const auth = require('../middleware/auth')
 const multer = require('../middleware/multer-config')
 const fs = require('fs')
 
-
+//Création de post
 router.post('/', auth, multer, (req, res, next) => {
     const today = new Date()
+    //Si il y a une image
     if(!req.file) {
         const postData = {
             post: req.body.form,
@@ -21,6 +22,7 @@ router.post('/', auth, multer, (req, res, next) => {
         Post.create(postData)
         .then(() => res.status(201).json({message: "Post enregistré !", data: postData}))
         .catch( error => res.status(400).json({error}))
+    //Si il n'y a pas d'image
     } else {
         const postData = {
             post: req.body.form,
@@ -37,6 +39,7 @@ router.post('/', auth, multer, (req, res, next) => {
     }
 })
 
+//suppression d'un post avec l'image dans le dossier images du serveur
 router.delete('/:id', auth, (req, res, next) => {
     var imageUrl = req.body.imageUrl
     var filename = imageUrl.split('/images')[1]
