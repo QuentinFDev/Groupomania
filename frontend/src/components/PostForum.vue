@@ -11,10 +11,12 @@
                 </div>
                 <div class="options" v-if="post.createdby == userName">
                     <button class="btn modifyPost" @click="modifyPost(post)">Modifier</button>
-                    <button class="btn removePost" @click="removePost(post.id)">Supprimer</button>
+                    <button class="btn removePost" @click="removePost(post)">Supprimer</button>
                 </div>
             </div>
             <div class="corpspost">
+                <p>{{post.likes}}</p>
+                <p>{{post.usersliked}}</p>
                 <p class="textpost">{{post.post}}</p>
                 <img :src="post.imageUrl" alt="">
                 <h2>commentaires: </h2>
@@ -93,15 +95,19 @@ export default {
             location.reload()
         },
         //Supprimer un post et les commentaires du post
-        async removePost(postId) {
-            await axios.delete('http://localhost:5000/posts/' + postId, {headers:
-            {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
-            }})
-            await axios.delete('http://localhost:5000/posts/comments/' + postId, {headers:
-            {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
-            }})
+        async removePost(post) {
+            await axios.delete(`http://localhost:5000/posts/${post.id}`, {
+                headers: {
+                    Authorization : 'Bearer ' + localStorage.getItem('token')
+                },
+                data: {
+                    imageUrl : post.imageUrl
+                }
+            })
+            await axios.delete('http://localhost:5000/posts/comments/' + post.id, {headers:
+                {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }})
             location.reload()
         },
         //Modifier un post

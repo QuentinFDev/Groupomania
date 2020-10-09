@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router()
 const auth = require('../middleware/auth')
 const multer = require('../middleware/multer-config')
+const fs = require('fs')
 
 
 router.post('/', auth, multer, (req, res, next) => {
@@ -13,7 +14,9 @@ router.post('/', auth, multer, (req, res, next) => {
             created: today,
             createdby: req.body.createdby,
             letterUserPost: req.body.letterUserPost,
-            imageUrl : "null"
+            imageUrl : "null",
+            likes: 0,
+            usersliked: []
         }
         Post.create(postData)
         .then(() => res.status(201).json({message: "Post enregistré !", data: postData}))
@@ -24,7 +27,9 @@ router.post('/', auth, multer, (req, res, next) => {
             created: today,
             createdby: req.body.createdby,
             letterUserPost: req.body.letterUserPost,
-            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+            likes: 0,
+            usersliked: []
         }
         Post.create(postData)
         .then(() => res.status(201).json({message: "Post enregistré !", data: postData}))
@@ -33,13 +38,19 @@ router.post('/', auth, multer, (req, res, next) => {
 })
 
 router.delete('/:id', auth, (req, res, next) => {
-        Post.destroy({
-            where: {
-                id : req.params.id
-            }
-        })
-        .then(() => res.status(201).json({message: "Post supprimé !"}))
-        .catch( error => res.status(400).json({error}))
+    var imageUrl = req.body.imageUrl
+    var filename = imageUrl.split('/images')[1]
+    console.log(filename)
+    if(filename != undefined){
+        fs.unlinkSync(`images/${filename}`)
+    }
+    Post.destroy({
+        where: {
+            id : req.params.id
+        }
+    })
+    .then(() => res.status(201).json({message: "Post supprimé !"}))
+    .catch( error => res.status(400).json({error}))
 })
 
 /*
@@ -69,7 +80,7 @@ router.put('/:id', auth, (req, res, next) => {
             id : req.params.id
         }
     })
-    .then(() => res.status(201).json({message: "Post supprimé !"}))
+    .then(() => res.status(201).json({message: "Post liké !"}))
     .catch( error => res.status(400).json({error}))
 })
 
