@@ -31,6 +31,11 @@ Vue.use(VueRouter)
     name:'NewPost',
     component: () => import('../views/NewPost.vue')
   },
+  {
+    path:'/modifyPost/',
+    name:'ModifyPost',
+    component: () => import('../views/ModifyPost.vue')
+  },
 ]
 
 const router = new VueRouter({

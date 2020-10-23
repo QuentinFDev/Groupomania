@@ -15,6 +15,7 @@
                 </div>
             </div>
             <div class="corpspost">
+                <p>{{post.userId}}</p>
                 <p>{{post.likes}}</p>
                 <p>{{post.usersliked}}</p>
                 <p class="textpost">{{post.post}}</p>
@@ -66,6 +67,7 @@ export default {
             this.posts = posts.data
             console.log(posts.data);
         },
+        /*
         //Poster un commentaire
         async fetchComment(postId, e){
             if(e.key == 'Enter' && this.comment[postId] != null) {
@@ -77,6 +79,8 @@ export default {
                 location.reload()
             }
         },
+        */
+        /*
         //Récuperer tous les commentaires
         async fetchComments() {
             const comments = await axios.get('http://localhost:5000/posts/comments', {headers:
@@ -86,6 +90,8 @@ export default {
             }})
             this.comments = comments.data
         },
+        */
+        /*
         //Liker un post
         async onLike(postId) {
             await axios.put('http://localhost:5000/posts/' + postId, {headers:
@@ -94,40 +100,29 @@ export default {
             }})
             location.reload()
         },
+        */
+        
         //Supprimer un post et les commentaires du post
         async removePost(post) {
-            await axios.delete(`http://localhost:5000/posts/${post.id}`, {
-                headers: {
-                    Authorization : 'Bearer ' + localStorage.getItem('token')
-                },
-                data: {
-                    imageUrl : post.imageUrl
-                }
-            })
-            await axios.delete('http://localhost:5000/posts/comments/' + post.id, {headers:
+            await axios.delete(`http://localhost:5000/posts/${post.id}`, {headers:
                 {
                     'Authorization' : 'Bearer ' + localStorage.getItem('token')
                 }})
             location.reload()
         },
         //Modifier un post
-        async modifyPost(post){
-            await axios.put('http://localhost:5000/posts/' + post.id, 
-            {
-                imageUrl : post.imageUrl,
-                post : post.post
-            },
-            {headers:
-                {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
-                }}
-            ),
-            document.location.href="http://localhost:8080/post"
+       async modifyPost(post) {
+           if(post.userId == localStorage.getItem('UserId')) {
+                this.$router.push(`/modifyPost?post=${post.id}`)
+           }
+           else {
+               alert('Vous ne pouvez pas modifier ce post')
+           }
         }
     },
     mounted(){
         this.fetchPosts()
-        this.fetchComments()
+        //this.fetchComments()
     },
 }
 </script>

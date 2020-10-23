@@ -4,6 +4,8 @@
         "existant",
         "firstname",
         "lastname",
+        "modifi",
+        "modifié",
         "usersliked"
     ]
 }
