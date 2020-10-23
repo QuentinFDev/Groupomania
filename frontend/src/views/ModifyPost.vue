@@ -3,8 +3,8 @@
         <headerpost/>
         <form id="post-form" @submit="postForm">
             <div class="form-group">
-                <textarea class="form-control" placeholder="Ecrivez-ici..." id="description" v-model="newpost.form"></textarea>
-                <label for="file" class="label">Upload File</label>
+                <textarea class="form-control" :placeholder="post.post" id="description" v-model="post.post"></textarea>
+                <label for="file" class="label">selectionner une image</label>
                 <input type="file" accept="image/*" ref="file" @change="selectFile"/>
             </div>
             <button class="submit" type="submit">Publier</button>
@@ -20,35 +20,41 @@ import Vueaxios from 'vue-axios'
 Vue.use(Vueaxios, axios)
 
 export default {
-    name: 'NewPost',
+    name: 'ModifyPost',
     components:{
         headerpost,
     },
     data(){
         return{
-            newpost:{
-                form:null,
-                file : "",
-                createdby: localStorage.getItem("Name"),
-                userId : localStorage.getItem('UserId'),
-                letterUserPost: localStorage.getItem("Name").substr(0, 1)
-            }
+            post:[]
         }
     },
     methods:{
+        /*Récupération d'un Post*/
+        async fetchPost() {
+            var urlParams = new URLSearchParams(window.location.search)
+            var id = urlParams.get("post")
+            const post = await axios.get('http://localhost:5000/posts/' + id , {headers:
+            {
+                'Authorization' : 'Bearer ' + localStorage.getItem('token'),
+                'Name' : localStorage.getItem('Name')
+            }})
+            if(post.data.userId == localStorage.getItem('UserId')) {
+                this.post = post.data
+            } else {
+                this.$router.push('forum')
+            }
+        },
         selectFile() {
             console.log(this.$refs.file.files[0]);
-            this.newpost.file = this.$refs.file.files[0]  
+            this.post.file = this.$refs.file.files[0]  
         },
         postForm(e){
             let formData = new FormData()
-            formData.append('form', this.newpost.form)
-            formData.append('createdby', this.newpost.createdby)
-            formData.append('userId', this.newpost.userId)
-            formData.append('letterUserPost', this.newpost.letterUserPost)
-            formData.append('file', this.newpost.file)
-            if(this.newpost.form != null){
-                this.axios.post('http://localhost:5000/posts', formData, {headers:
+            formData.append('post', this.post.post)
+            formData.append('file', this.post.file)
+            if(this.post.post != null){
+                this.axios.put(`http://localhost:5000/posts/${this.post.id}`, formData, {headers:
                     {
                     'Content-Type': 'multipart/form-data',
                     'Authorization' : 'Bearer ' + localStorage.getItem('token'),
@@ -69,7 +75,10 @@ export default {
         console.log(this.newpost);
         e.preventDefault();
         },
-    }
+    },
+    mounted(){
+        this.fetchPost()
+    },
 }
 </script>
 

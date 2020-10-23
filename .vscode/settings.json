@@ -3,6 +3,9 @@
         "Utilisateur",
         "existant",
         "firstname",
-        "lastname"
+        "lastname",
+        "modifi",
+        "modifié",
+        "usersliked"
     ]
 }

@@ -12,10 +12,19 @@ router.post('/comments', (req, res) => {
       createdby: req.body.name,
       postId: req.body.postId
     }
-    console.log(commentData);
     Comment.create(commentData)
         .then(() => res.status(201).json({message: "Commentaire enregistré !", data: commentData}))
         .catch( error => res.status(400).json({error}))
+})
+
+router.delete('/comments/:id',auth, (req, res, next) => {
+  Comment.destroy({
+      where: {
+          postId : req.params.id
+      }
+  })
+  .then(() => res.status(201).json({message: "Commentaires supprimés !"}))
+  .catch( error => res.status(400).json({error}))
 })
 
 router.get("/comments", auth, (req, res, next) => {

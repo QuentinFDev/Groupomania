@@ -1,7 +1,9 @@
 const Sequelize = require('sequelize')
 const db = require('../database/db.js')
+const Comment = require('./Comment')
+const User = require('./User')
 
-module.exports = db.sequelize.define(
+let Post = db.sequelize.define(
   'posts',
   {
     id: {
@@ -17,6 +19,9 @@ module.exports = db.sequelize.define(
     },
     createdby: {
       type: Sequelize.STRING
+    },
+    userId: {
+      type: Sequelize.INTEGER
     },
     created: {
       type: Sequelize.DATE,
@@ -36,3 +41,15 @@ module.exports = db.sequelize.define(
     timestamps: false
   }
 )
+
+  Post.hasMany(Comment, {
+    foreignKey: 'postId',
+    as : 'comments'
+  })
+  Post.belongsTo(User, {
+    foreignKey: 'userId',
+    as : 'author'
+  })
+
+
+module.exports = Post
