@@ -18,7 +18,7 @@
                 <p class="textpost">{{post.post}}</p>
                 <img :src="post.imageUrl" alt="">
                 <h3 v-if="post.comments.length < 1">Pas de commentaire pour ce post !</h3>
-                <h3 v-else @click="comments()"><i>{{post.comments.length}} commentaire</i><i v-if="post.comments.length > 1">s</i>:</h3>
+                <h3 v-else @click="comments()"><i>{{post.comments.length}} commentaire</i><i v-if="post.comments.length > 1">s</i><i>:</i></h3>
             </div>
             <div class="postComments" v-bind:class="{'open':commentsopen}" v-for="comment in post.comments" :key="comment.id">
                 <h3><i>{{comment.createdby}} ({{comment.created}}) dit:</i> {{comment.comment}} </h3>
@@ -76,8 +76,12 @@ export default {
                 location.reload()
             }
         },
-        //Supprimer un post et les commentaires du post
+        //Supprimer un post, les commentaires et les likes du post
         async removePost(post) {
+            await axios.delete(`http://localhost:5000/posts/likes/${post.id}`, {headers:
+                {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }})
             await axios.delete(`http://localhost:5000/posts/comments/${post.id}`, {headers:
                 {
                     'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -109,20 +113,18 @@ export default {
                 }})
             location.reload()
         },
-        /*
         //Liker un post
         async onLike(postId) {
-            await axios.put('http://localhost:5000/posts/' + postId, {headers:
-            {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
-            }})
-            location.reload()
+            await axios.post('http://localhost:5000/posts/likes', {
+                postId : postId,
+                userName: localStorage.getItem('Name'),
+            })
         },
-        */
     },
     mounted(){
         this.fetchPosts()
         this.fetchComments()
+        this.onLike()
     },
 }
 </script>

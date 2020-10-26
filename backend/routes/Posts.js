@@ -18,8 +18,6 @@ router.post('/', auth, multer, (req, res, next) => {
             userId: req.body.userId,
             letterUserPost: req.body.letterUserPost,
             imageUrl : "null",
-            likes: 0,
-            usersliked: []
         }
         Post.create(postData)
         .then(() => res.status(201).json({message: "Post enregistré !", data: postData}))
@@ -33,8 +31,6 @@ router.post('/', auth, multer, (req, res, next) => {
             userId: req.body.userId,
             letterUserPost: req.body.letterUserPost,
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-            likes: 0,
-            usersliked: []
         }
         Post.create(postData)
         .then(() => res.status(201).json({message: "Post enregistré !", data: postData}))
@@ -102,7 +98,7 @@ router.put('/:id', auth, multer, (req, res, next) => {
 
 router.get("/", auth, (req, res, next) => {
     try {
-        Post.findAll({include : ['comments', 
+        Post.findAll({include : ['comments', 'likes', 
         {
             model: User,
             as : 'author',
