@@ -62,14 +62,41 @@ router.delete('/:id', auth, (req, res, next) => {
 
 //modification d'un post
 router.put('/:id', auth, multer, (req, res, next) => {
+    const today = new Date()
     Post.findByPk(req.params.id)
-    Post.update({
-        post : req.body.post,
-        imageUrl : "null",
-        created: new Date()
-    })
-    .then(() => res.status(201).json({message: "Post modifié !"}))
-    .catch( error => res.status(400).json({error}))
+        .then((post) => {
+            const filename = post.imageUrl.split('/images/')[1]
+            fs.unlink(`images/${filename}`, () => {
+                //Si il n'y a pas image
+                if(!req.file) {
+                    Post.update({
+                        post: req.body.post,
+                        created: today,
+                        imageUrl : "null",
+                    },{
+                        where: {
+                            id : req.params.id
+                        }
+                    })
+                    .then(() => res.status(201).json({message: "Post Modifié !"}))
+                    .catch( error => res.status(400).json({error}))
+                } else {
+                    //Si il y a une image
+                    Post.update({ 
+                        post: req.body.post,
+                        created: today,
+                        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                    },{
+                        where: {
+                            id : req.params.id
+                        }
+                    })
+                    .then(() => res.status(201).json({message: "Post Modifié !"}))
+                    .catch( error => res.status(400).json({error}))
+                }
+            })
+        })
+        .catch(error => res.status(500).json({error}))
 })
 
 
