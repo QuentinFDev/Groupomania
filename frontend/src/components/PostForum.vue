@@ -17,13 +17,25 @@
             <div class="corpspost">
                 <p class="textpost">{{post.post}}</p>
                 <img :src="post.imageUrl" alt="">
-                <h3 v-if="post.comments.length < 1">Pas de commentaire pour ce post !</h3>
-                <h3 v-else @click="comments()"><i>{{post.comments.length}} commentaire</i><i v-if="post.comments.length > 1">s</i><i>:</i></h3>
+                <div class="react">
+                    <h3 v-if="post.comments.length < 1">Pas de commentaire pour ce post !</h3>
+                    <h3 v-else @click="comments()"><i>{{post.comments.length}} commentaire</i><i v-if="post.comments.length > 1">s</i></h3>
+                    <h3 v-if="post.likes.length < 1">Pas de j'aimes pour ce post !</h3>
+                    <h3 v-else @click="likes()"><i>{{post.likes.length}} personne</i><i v-if="post.likes.length > 1">s</i><i> aime<i v-if="post.likes.length > 1">nt</i> ce post </i></h3>
+                </div>
             </div>
             <div class="postComments" v-bind:class="{'open':commentsopen}" v-for="comment in post.comments" :key="comment.id">
-                <h3><i>{{comment.createdby}} ({{comment.created}}) dit:</i> {{comment.comment}} </h3>
+                <p v-if="comment.createdby == userName">({{comment.created}}) Vous avez dit : {{comment.comment}}</p>
+                <p v-else>({{comment.created}}) {{comment.createdby}} a dit : {{comment.comment}}</p>
                 <div v-if="comment.createdby == userName">
                     <button class="btn removeComment" @click="removeComment(comment)">Supprimer</button>
+                </div>
+            </div>
+            <div class="postLikes" v-bind:class="{'open':likesopen}" v-for="like in post.likes" :key="like.id">
+                <p v-if="like.userName == userName">Vous aimez ce post</p>
+                <p v-else>{{like.userName}} aime ce post</p>
+                <div v-if="like.userName == userName">
+                    <button class="btn removeLike" @click="removeLike(like)">J'aime plus</button>
                 </div>
             </div>
             <div class="footerpost">
@@ -51,7 +63,8 @@ export default {
             comment: {},
             userId: localStorage.getItem('UserId'),
             userName: localStorage.getItem('Name'),
-            commentsopen : false
+            commentsopen : false,
+            likesopen : false
         }
     },
     methods : {
@@ -105,6 +118,10 @@ export default {
         comments(){
             this.commentsopen=!this.commentsopen
         },
+        //ouvrir le panneau des likes
+        likes(){
+            this.likesopen=!this.likesopen
+        },
         //supprimer un commentaire
         async removeComment(post) {
             await axios.delete(`http://localhost:5000/posts/comment/${post.id}`, {headers:
@@ -119,12 +136,19 @@ export default {
                 postId : postId,
                 userName: localStorage.getItem('Name'),
             })
+            location.reload()
+        },
+        //supprimer un like
+        async removeLike(post) {
+            await axios.delete(`http://localhost:5000/posts/like/${post.id}`, {headers:
+                {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }})
+            location.reload()
         },
     },
     mounted(){
         this.fetchPosts()
-        this.fetchComments()
-        this.onLike()
     },
 }
 </script>
@@ -220,6 +244,10 @@ $clrfooterpost : #c4c4c4;
             text-decoration: underline overline $clrlogos;
         }
     }
+    .react{
+        display: flex;
+        justify-content: space-around;
+    }
     .postComments{
         display: none;
         &.open{
@@ -233,8 +261,49 @@ $clrfooterpost : #c4c4c4;
             background: $clrprimaire;
             border-radius: 25px;
             p{
-                font-size: 1.2em;
-                padding-bottom: 1%;
+                font-size: 1.5em;
+            }
+            .btn{
+                appearance: none;
+                background: none;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 10px 20px;
+                border-radius: 30px;
+                color: #FE4880;
+                font-size: 14px;
+                font-weight: 600;
+                margin: 15px;
+                transition: 0.4s;
+                border: 3px solid #FE4880;
+                background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
+                background-size: 200%;
+                background-position: 0%;
+                &:hover{
+                    color: #FFF;
+                    background-position: 100%;
+                }
+                &:active{
+                    scale: 0.95;
+                }
+            }
+        }
+    }
+    .postLikes{
+        display: none;
+        &.open{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            padding-left: 2%;
+            margin: 1%;
+            min-height: 73px;
+            background: $clrprimaire;
+            border-radius: 25px;
+            p{
+                font-size: 1.5em;
             }
             .btn{
                 appearance: none;
