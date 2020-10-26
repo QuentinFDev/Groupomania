@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="post" v-for="post in posts.slice().reverse()" :key="post.id">
+        <div class="post" v-for="post in posts.slice()" :key="post.id">
             <div class="headerpost">
                 <div class="data-post">
                     <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
@@ -15,17 +15,15 @@
                 </div>
             </div>
             <div class="corpspost">
-                <p>{{post.userId}}</p>
-                <p>{{post.likes}}</p>
-                <p>{{post.usersliked}}</p>
                 <p class="textpost">{{post.post}}</p>
                 <img :src="post.imageUrl" alt="">
-                <h2>commentaires: </h2>
+                <h3 v-if="post.comments.length < 1">Pas de commentaire pour ce post !</h3>
+                <h3 v-else @click="comments()"><i>{{post.comments.length}} commentaire</i><i v-if="post.comments.length > 1">s</i>:</h3>
             </div>
-            <div class="postComments" v-for="comment in comments.slice().reverse()" :key="comment.id">
-                <div v-if="post.id == comment.postId">
-                    <h3>{{comment.createdby}} le <i>{{comment.created}}</i></h3>
-                    <p>{{comment.comment}}</p>
+            <div class="postComments" v-bind:class="{'open':commentsopen}" v-for="comment in post.comments" :key="comment.id">
+                <h3><i>{{comment.createdby}} ({{comment.created}}) dit:</i> {{comment.comment}} </h3>
+                <div v-if="comment.createdby == userName">
+                    <button class="btn removeComment" @click="removeComment(comment)">Supprimer</button>
                 </div>
             </div>
             <div class="footerpost">
@@ -50,10 +48,10 @@ export default {
     data(){
         return{
             posts : [],
-            comments: [],
             comment: {},
             userId: localStorage.getItem('UserId'),
             userName: localStorage.getItem('Name'),
+            commentsopen : false
         }
     },
     methods : {
@@ -67,7 +65,6 @@ export default {
             this.posts = posts.data
             console.log(posts.data);
         },
-        /*
         //Poster un commentaire
         async fetchComment(postId, e){
             if(e.key == 'Enter' && this.comment[postId] != null) {
@@ -79,31 +76,12 @@ export default {
                 location.reload()
             }
         },
-        */
-        /*
-        //Récuperer tous les commentaires
-        async fetchComments() {
-            const comments = await axios.get('http://localhost:5000/posts/comments', {headers:
-            {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token'),
-                'Name' : localStorage.getItem('Name')
-            }})
-            this.comments = comments.data
-        },
-        */
-        /*
-        //Liker un post
-        async onLike(postId) {
-            await axios.put('http://localhost:5000/posts/' + postId, {headers:
-            {
-                'Authorization' : 'Bearer ' + localStorage.getItem('token')
-            }})
-            location.reload()
-        },
-        */
-        
         //Supprimer un post et les commentaires du post
         async removePost(post) {
+            await axios.delete(`http://localhost:5000/posts/comments/${post.id}`, {headers:
+                {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }})
             await axios.delete(`http://localhost:5000/posts/${post.id}`, {headers:
                 {
                     'Authorization' : 'Bearer ' + localStorage.getItem('token')
@@ -118,11 +96,33 @@ export default {
            else {
                alert('Vous ne pouvez pas modifier ce post')
            }
-        }
+        },
+        //ouvrir le panneau des commentaires
+        comments(){
+            this.commentsopen=!this.commentsopen
+        },
+        //supprimer un commentaire
+        async removeComment(post) {
+            await axios.delete(`http://localhost:5000/posts/comment/${post.id}`, {headers:
+                {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }})
+            location.reload()
+        },
+        /*
+        //Liker un post
+        async onLike(postId) {
+            await axios.put('http://localhost:5000/posts/' + postId, {headers:
+            {
+                'Authorization' : 'Bearer ' + localStorage.getItem('token')
+            }})
+            location.reload()
+        },
+        */
     },
     mounted(){
         this.fetchPosts()
-        //this.fetchComments()
+        this.fetchComments()
     },
 }
 </script>
@@ -173,14 +173,12 @@ $clrfooterpost : #c4c4c4;
             }
         }
         .options{
-
             .btn{
                 appearance: none;
                 background: none;
                 border: none;
                 outline: none;
                 cursor: pointer;
-
                 padding: 10px 20px;
                 border-radius: 4px;
                 color: #FE4880;
@@ -210,19 +208,57 @@ $clrfooterpost : #c4c4c4;
         white-space: pre-wrap;
         word-wrap: break-word;
         }
+        img{
+            margin-bottom: 2%;
+        }
+        h3 i{
+            font-size: 1.5vw;
+            cursor: pointer;
+            color: blue;
+            text-decoration: underline overline $clrlogos;
+        }
     }
     .postComments{
-        text-align: left;
-        padding-left: 2%;
-        margin: 1%;
-        background: $clrprimaire;
-        border-radius: 25px;
-        h3{
-            padding-top: 1%;
-        }
-        p{
-            font-size: 1.2em;
-            padding-bottom: 1%;
+        display: none;
+        &.open{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: left;
+            padding-left: 2%;
+            margin: 1%;
+            min-height: 73px;
+            background: $clrprimaire;
+            border-radius: 25px;
+            p{
+                font-size: 1.2em;
+                padding-bottom: 1%;
+            }
+            .btn{
+                appearance: none;
+                background: none;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 10px 20px;
+                border-radius: 30px;
+                color: #FE4880;
+                font-size: 14px;
+                font-weight: 600;
+                margin: 15px;
+                transition: 0.4s;
+                border: 3px solid #FE4880;
+                background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
+                background-size: 200%;
+                background-position: 0%;
+                &:hover{
+                    color: #FFF;
+                    background-position: 100%;
+                }
+                &:active{
+                    scale: 0.95;
+                }
+            }
         }
     }
     .footerpost{

@@ -17,6 +17,16 @@ router.post('/comments', (req, res) => {
         .catch( error => res.status(400).json({error}))
 })
 
+router.delete('/comment/:id',auth, (req, res, next) => {
+  Comment.destroy({
+      where: {
+          id : req.params.id
+      }
+  })
+  .then(() => res.status(201).json({message: "Commentaire supprimé !"}))
+  .catch( error => res.status(400).json({error}))
+})
+
 router.delete('/comments/:id',auth, (req, res, next) => {
   Comment.destroy({
       where: {
