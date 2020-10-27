@@ -17,25 +17,41 @@
             <div class="corpspost">
                 <p class="textpost">{{post.post}}</p>
                 <img :src="post.imageUrl" alt="">
-                <div class="react">
-                    <h3 v-if="post.comments.length < 1">Pas de commentaire pour ce post !</h3>
-                    <h3 v-else @click="comments()"><i>{{post.comments.length}} commentaire</i><i v-if="post.comments.length > 1">s</i></h3>
-                    <h3 v-if="post.likes.length < 1">Pas de j'aimes pour ce post !</h3>
-                    <h3 v-else @click="likes()"><i>{{post.likes.length}} personne</i><i v-if="post.likes.length > 1">s</i><i> aime<i v-if="post.likes.length > 1">nt</i> ce post </i></h3>
-                </div>
             </div>
-            <div class="postComments" v-bind:class="{'open':commentsopen}" v-for="comment in post.comments" :key="comment.id">
-                <p v-if="comment.createdby == userName">({{comment.created}}) Vous avez dit : {{comment.comment}}</p>
-                <p v-else>({{comment.created}}) {{comment.createdby}} a dit : {{comment.comment}}</p>
-                <div v-if="comment.createdby == userName">
-                    <button class="btn removeComment" @click="removeComment(comment)">Supprimer</button>
+            <div class="reacts">
+                <div class="showComments">
+                    <button class="btnShow" v-if="post.comments.length > 0" @click="showComments = true">{{post.comments.length}} Commentaire<strong v-if="post.comments.length > 1">s</strong></button>
+                    <transition name="fade" appear>
+                        <div class="comments-overlay" v-if="showComments" @click="showComments = false"></div>
+                    </transition>
+                    <transition name="slide" appear>
+                        <div class="comments" v-if="showComments">
+                            <div class="oneComment" v-for="comment in post.comments" :key="comment.postId">
+                                <p><b>({{comment.created}}) {{comment.createdby}} a dit : </b>{{comment.comment}}</p>
+                                <div v-if="comment.createdby == userName">
+                                    <button class="btn removeComment" @click="removeComment(comment)">Supprimer</button>
+                                </div>
+                            </div>
+                            <button class="button" @click="showComments = false">Fermer</button>
+                        </div>
+                    </transition>
                 </div>
-            </div>
-            <div class="postLikes" v-bind:class="{'open':likesopen}" v-for="like in post.likes" :key="like.id">
-                <p v-if="like.userName == userName">Vous aimez ce post</p>
-                <p v-else>{{like.userName}} aime ce post</p>
-                <div v-if="like.userName == userName">
-                    <button class="btn removeLike" @click="removeLike(like)">J'aime plus</button>
+                <div class="showLikes">
+                    <button class="btnShow" v-if="post.likes.length > 0" @click="showLikes = true">{{post.likes.length}} Like<strong v-if="post.likes.length > 1">s</strong></button>
+                    <transition name="fade" appear>
+                        <div class="likes-overlay" v-if="showLikes" @click="showLikes = false"></div>
+                    </transition>
+                    <transition name="slide" appear>
+                        <div class="likes" v-if="showLikes">
+                            <div class="oneLike" v-for="like in post.likes" :key="like.postId">
+                                <p><b>{{like.userName}}</b> aime ce post</p>
+                                <div v-if="like.userName == userName">
+                                    <button class="btn removeLike" @click="removeLike(like)">J'aime plus</button>
+                                </div>
+                            </div>
+                            <button class="button" @click="showLikes = false">Fermer</button>
+                        </div>
+                    </transition>
                 </div>
             </div>
             <div class="footerpost">
@@ -64,7 +80,9 @@ export default {
             userId: localStorage.getItem('UserId'),
             userName: localStorage.getItem('Name'),
             commentsopen : false,
-            likesopen : false
+            likesopen : false,
+            showComments : false,
+            showLikes : false
         }
     },
     methods : {
@@ -244,37 +262,104 @@ $clrfooterpost : #c4c4c4;
             text-decoration: underline overline $clrlogos;
         }
     }
-    .react{
+    .reacts{
+        position: relative;
         display: flex;
         justify-content: space-around;
-    }
-    .postComments{
-        display: none;
-        &.open{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-align: left;
-            padding-left: 2%;
-            margin: 1%;
-            min-height: 73px;
-            background: $clrprimaire;
-            border-radius: 25px;
-            p{
-                font-size: 1.5em;
+        align-items: center;
+        padding-bottom: 2vw;
+        width: 100vw;
+        overflow-x: hidden;
+        .btnShow{
+            appearance: none;
+            outline: none;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: inline-block;
+            padding: 15px 25px;
+            background-image: linear-gradient(to right, #CC2E5D, #FF5858);
+            border-radius: 8px;
+            color: #FFF;
+            font-size: 18px;
+            font-weight: 700;
+            box-shadow: 3px 3px rgba(0, 0, 0, 0.4);
+            transition: 0.4s ease-out;
+            &:hover {
+                box-shadow: 6px 6px rgba(0, 0, 0, 0.6);
             }
-            .btn{
+        }
+        .comments-overlay,
+        .likes-overlay{
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 98;
+            //background-color: rgba(0, 0, 0, 0.3);
+        }
+        .comments,
+        .likes{
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99;
+            width: 100%;
+            max-width: 40vw;
+            max-height: 60vh;
+            overflow-y: scroll;
+            background-color: $clrfooterpost;
+            border-radius: 16px;
+            padding: 25px;
+            .oneComment,
+            .oneLike{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                p {
+                    text-align: left;
+                    font-size: 1.3em;
+                    font-weight: 500;
+                    margin-bottom: 5%;
+                }
+                .btn{
+                    appearance: none;
+                    background: none;
+                    border: none;
+                    outline: none;
+                    cursor: pointer;
+                    padding: 10px 20px;
+                    border-radius: 4px;
+                    color: #FE4880;
+                    font-size: 14px;
+                    font-weight: 600;
+                    transition: 0.4s;
+                    border: 3px solid #FE4880;
+                    background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
+                    background-size: 200%;
+                    background-position: 0%;
+                    &:hover{
+                        color: #FFF;
+                        background-position: 100%;
+                    }
+                    &:active{
+                        scale: 0.95;
+                    }
+                }
+            }
+            .button{
                 appearance: none;
                 background: none;
                 border: none;
                 outline: none;
                 cursor: pointer;
                 padding: 10px 20px;
-                border-radius: 30px;
+                border-radius: 4px;
                 color: #FE4880;
                 font-size: 14px;
                 font-weight: 600;
-                margin: 15px;
                 transition: 0.4s;
                 border: 3px solid #FE4880;
                 background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
@@ -289,47 +374,21 @@ $clrfooterpost : #c4c4c4;
                 }
             }
         }
-    }
-    .postLikes{
-        display: none;
-        &.open{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            text-align: left;
-            padding-left: 2%;
-            margin: 1%;
-            min-height: 73px;
-            background: $clrprimaire;
-            border-radius: 25px;
-            p{
-                font-size: 1.5em;
-            }
-            .btn{
-                appearance: none;
-                background: none;
-                border: none;
-                outline: none;
-                cursor: pointer;
-                padding: 10px 20px;
-                border-radius: 30px;
-                color: #FE4880;
-                font-size: 14px;
-                font-weight: 600;
-                margin: 15px;
-                transition: 0.4s;
-                border: 3px solid #FE4880;
-                background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
-                background-size: 200%;
-                background-position: 0%;
-                &:hover{
-                    color: #FFF;
-                    background-position: 100%;
-                }
-                &:active{
-                    scale: 0.95;
-                }
-            }
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity .5s;
+        }
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
+        }
+        .slide-enter-active,
+        .slide-leave-active {
+            transition: transform .5s;
+        }
+        .slide-enter,
+        .slide-leave-to {
+            transform: translateY(-50%) translateX(100vw);
         }
     }
     .footerpost{
