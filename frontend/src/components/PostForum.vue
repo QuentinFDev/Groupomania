@@ -20,36 +20,36 @@
             </div>
             <div class="reacts">
                 <div class="showComments">
-                    <button class="btnShow" v-if="post.comments.length > 0" @click="showComments = true">{{post.comments.length}} Commentaire<strong v-if="post.comments.length > 1">s</strong></button>
+                    <button class="btnShow" v-if="post.comments.length > 0" @click="showCommentsAction(post)">{{post.comments.length}} Commentaire<strong v-if="post.comments.length > 1">s</strong></button>
                     <transition name="fade" appear>
-                        <div class="comments-overlay" v-if="showComments" @click="showComments = false"></div>
+                        <div class="comments-overlay" v-if="showComments[post.id]" @click="showComments[post.id] = false"></div>
                     </transition>
                     <transition name="slide" appear>
-                        <div class="comments" v-if="showComments">
+                        <div class="comments" v-if="showComments[post.id]">
                             <div class="oneComment" v-for="comment in post.comments" :key="comment.postId">
                                 <p><b>({{comment.created}}) {{comment.createdby}} a dit : </b>{{comment.comment}}</p>
                                 <div v-if="comment.createdby == userName">
                                     <button class="btn removeComment" @click="removeComment(comment)">Supprimer</button>
                                 </div>
                             </div>
-                            <button class="button" @click="showComments = false">Fermer</button>
+                            <button class="button" @click="showComments[post.id] = false">Fermer</button>
                         </div>
                     </transition>
                 </div>
                 <div class="showLikes">
-                    <button class="btnShow" v-if="post.likes.length > 0" @click="showLikes = true">{{post.likes.length}} Like<strong v-if="post.likes.length > 1">s</strong></button>
+                    <button class="btnShow" v-if="post.likes.length > 0" @click="showLikesAction(post)">{{post.likes.length}} Like<strong v-if="post.likes.length > 1">s</strong></button>
                     <transition name="fade" appear>
-                        <div class="likes-overlay" v-if="showLikes" @click="showLikes = false"></div>
+                        <div class="likes-overlay" v-if="showLikes[post.id]" @click="showLikes[post.id] = false"></div>
                     </transition>
                     <transition name="slide" appear>
-                        <div class="likes" v-if="showLikes">
+                        <div class="likes" v-if="showLikes[post.id]">
                             <div class="oneLike" v-for="like in post.likes" :key="like.postId">
                                 <p><b>{{like.userName}}</b> aime ce post</p>
                                 <div v-if="like.userName == userName">
                                     <button class="btn removeLike" @click="removeLike(like)">J'aime plus</button>
                                 </div>
                             </div>
-                            <button class="button" @click="showLikes = false">Fermer</button>
+                            <button class="button" @click="showLikes[post.id] = false">Fermer</button>
                         </div>
                     </transition>
                 </div>
@@ -81,8 +81,8 @@ export default {
             userName: localStorage.getItem('Name'),
             commentsopen : false,
             likesopen : false,
-            showComments : false,
-            showLikes : false
+            showComments : {},
+            showLikes : {},
         }
     },
     methods : {
@@ -93,8 +93,12 @@ export default {
                 'Authorization' : 'Bearer ' + localStorage.getItem('token'),
                 'Name' : localStorage.getItem('Name')
             }})
+            posts.data.forEach(element => {
+                this.showComments[element.id] = false
+            });
             this.posts = posts.data
             console.log(posts.data);
+            console.log(this.showComments);
         },
         //Poster un commentaire
         async fetchComment(postId, e){
@@ -104,7 +108,19 @@ export default {
                     postId : postId,
                     name: localStorage.getItem('Name'),
                 })
-                location.reload()
+                this.posts = this.posts.map(element => {
+                    if(element.id == postId) {
+                        element.comments.push({
+                        comment : this.comment[postId],
+                        postId : postId,
+                        createdby : localStorage.getItem('Name'),
+                        created : new Date()
+                        })
+                    }
+                    return element
+                })
+                this.comment[postId] = ''
+                this.comment = JSON.parse(JSON.stringify(this.comment))
             }
         },
         //Supprimer un post, les commentaires et les likes du post
@@ -132,14 +148,6 @@ export default {
                alert('Vous ne pouvez pas modifier ce post')
            }
         },
-        //ouvrir le panneau des commentaires
-        comments(){
-            this.commentsopen=!this.commentsopen
-        },
-        //ouvrir le panneau des likes
-        likes(){
-            this.likesopen=!this.likesopen
-        },
         //supprimer un commentaire
         async removeComment(post) {
             await axios.delete(`http://localhost:5000/posts/comment/${post.id}`, {headers:
@@ -154,7 +162,15 @@ export default {
                 postId : postId,
                 userName: localStorage.getItem('Name'),
             })
-            location.reload()
+            this.posts = this.posts.map(element => {
+                if(element.id == postId) {
+                    element.likes.push({
+                        userName: localStorage.getItem('Name')
+                    })
+                }
+                return element
+            })
+            this.like = JSON.parse(JSON.stringify(this.like))
         },
         //supprimer un like
         async removeLike(post) {
@@ -164,6 +180,16 @@ export default {
                 }})
             location.reload()
         },
+        //afficher la fenetre des commentaires
+        showCommentsAction(post) {
+            this.showComments[post.id] = !this.showComments[post.id]
+            this.showComments = JSON.parse(JSON.stringify(this.showComments))
+        },
+        //afficher la fenetre des likes
+        showLikesAction(post) {
+            this.showLikes[post.id] = !this.showLikes[post.id]
+            this.showLikes = JSON.parse(JSON.stringify(this.showLikes))
+        }
     },
     mounted(){
         this.fetchPosts()
