@@ -2,7 +2,10 @@
     <div class="header-forum">
         <div class="header-bar">
             <div class="rounduser"><p class="letteruser" v-bind="letteruser()">{{letterUser}}</p></div>
-            <input class="search-bar" type="text" placeholder="Rechercher..." id="search" name="search"/>
+            <div class="logo">
+                <img src="../assets/iconwithoutbackground.png" alt="logo groupomania">
+                <h1>Groupomania</h1>
+            </div>
             <div class="menu-burger" @click="menu()">
                 <i class="fas fa-bars fa-4x"></i>
             </div>
@@ -56,7 +59,7 @@ export default {
     src: url("../assets/fonts/nevis.ttf") format("truetype");
 }
 
-$clrprimaire : #c4c4c4; /*Couleur de font*/
+$clrprimaire : #c4c4c4;
 $clrecriture : #fd2f04; 
 $clrlogos : #d1515a;
 $clrtextsearch : #928f8f;
@@ -84,19 +87,20 @@ $clrtextsearch : #928f8f;
             text-transform: uppercase;
         }
     }
-    input{
-        padding-left: 20px;
-        width: 50%;
-        height: 40%;
-        background-color: white;
-        font-size: 4vh;
-        border-radius: 30px;
-        border: 0px;
-        text-shadow: 2px 2px #e6e6e6;
-        color: $clrtextsearch;
-        &:hover{
-            color: black;
-            text-shadow: none;
+    .logo{
+        display: flex;
+        background-color: $clrprimaire;
+        width: auto;
+        justify-content: center;
+        align-items: center;
+        img {
+            width: 18vh;
+            height: 18vh;
+        }
+        h1{
+            font-family: 'nevis', 'calibri', 'sans-serif';
+            color: $clrlogos;
+            font-size: 10vh;
         }
     }
     .menu-burger .fa-4x{
@@ -145,15 +149,21 @@ $clrtextsearch : #928f8f;
     }
 }
 
+@media screen and (max-width: 700px) {
+    .header-bar .logo{
+        img{
+            display: none;
+        }
+        h1{
+            font-size: 7vw;
+        }
+    } 
+}
 @media screen and (max-width: 550px){
     .header-bar{
         .rounduser{
             width: 12vw;
             height: 12vw;
-        }
-        input{
-        height: 60%;
-        font-size: 3.5vw;
         }
         .menu-burger .fa-4x{
             scale: 0.8;

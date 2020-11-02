@@ -4,14 +4,14 @@ const router = express.Router()
 const auth = require('../middleware/auth')
 
 
-router.post('/likes', (req, res) => {
+router.post('/likes/:id', auth, (req, res) => {
 	const likeData = {
-		postId: req.body.postId,
+		postId: req.params.id,
 		userName : req.body.userName
 	}
 	Like.create(likeData)
-		.then(() => res.status(201).json({message: "Like enregistré !", data: likeData}))
-		.catch( error => res.status(400).json({error}))
+	.then(() => res.status(201).json({message: "Like enregistré !", data: likeData}))
+	.catch( error => res.status(400).json({error}))
 })
 
 router.delete('/like/:id',auth, (req, res, next) => {

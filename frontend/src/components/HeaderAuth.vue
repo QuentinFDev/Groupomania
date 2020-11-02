@@ -1,7 +1,9 @@
 <template>
     <div class="header-auth">
-        <img src="../assets/iconwithoutbackground.png" alt="logo groupomania">
-        <h1>Groupomania</h1>
+        <a href="/">
+            <img src="../assets/iconwithoutbackground.png" alt="logo groupomania">
+            <h1>Groupomania</h1>
+        </a>
     </div>
 </template>
 
@@ -23,7 +25,7 @@ $clrecriture : #fd2f04;
 
 
 
-.header-auth{
+.header-auth a{
     display: flex;
     background-color: $clrprimaire;
     width: auto;
@@ -41,7 +43,7 @@ $clrecriture : #fd2f04;
     }
 }
 @media screen and (max-width: 700px){
-    .header-auth{
+    .header-auth a{
     height: 15vw;
     img {
         width: 18vw;
