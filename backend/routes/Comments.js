@@ -4,7 +4,7 @@ const router = express.Router()
 const auth = require('../middleware/auth')
 
 
-router.post('/comments', (req, res) => {
+router.post('/comments', auth, (req, res) => {
     const today = new Date()
     const commentData = {
       comment: req.body.content,

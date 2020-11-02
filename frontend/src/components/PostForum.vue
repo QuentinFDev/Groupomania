@@ -217,10 +217,16 @@ export default {
         //Poster un commentaire
         async fetchComment(postId, e){
             if(e.key == 'Enter' && this.comment[postId] != null) {
-                await axios.post('http://localhost:5000/posts/comments', {
+                await axios.post('http://localhost:5000/posts/comments', 
+                {
                     content: this.comment[postId],
                     postId : postId,
                     name: localStorage.getItem('Name'),
+                },
+                {
+                    headers: {
+                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                    }
                 })
                 this.posts = this.posts.map(element => {
                     if(element.id == postId) {
@@ -277,9 +283,13 @@ export default {
         },
         //Liker un post
         async onLike(postId) {
-            await axios.post('http://localhost:5000/posts/likes', {
+            await axios.post(`http://localhost:5000/posts/likes/${postId}`, {
                 postId : postId,
                 userName: localStorage.getItem('Name'),
+            }, {
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                }
             })
             this.posts = this.posts.map(element => {
                 if(element.id == postId) {
@@ -538,7 +548,7 @@ $clrfooterpost : #c4c4c4;
     }
     .footerpost{
         background: $clrfooterpost;
-        height: 3vw;
+        height: 5vw;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -654,13 +664,37 @@ $clrfooterpost : #c4c4c4;
     }
 }
 
-@media screen and (max-width: 1160px){
+
+@media screen and (max-width: 1050px){
     .post{
         .footerpost{
-            height: 6vw;
+            .like,
+            .share{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 3vw;
+                .btn-like,
+                .btn-share {
+                    padding: 12px 24px;
+                    font-weight: 500;
+                    font-size: 12px;
+                    .btn-icon {
+                        margin-left: 8px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 850px){
+    .post{
+        .footerpost{
+            height: 8vw;
         }
         .textpost{
-        font-size: 1.3em;
+        font-size: 1.2em;
         }
     }
 }
@@ -668,10 +702,22 @@ $clrfooterpost : #c4c4c4;
 @media screen and (max-width: 800px){
     .post{
         .footerpost{
-            height: 8vw;            
-        }
-        .textpost{
-        font-size: 1.2em;
+            .like,
+            .share{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-right: 3vw;
+                .btn-like,
+                .btn-share {
+                    padding: 12px 24px;
+                    font-weight: 500;
+                    font-size: 12px;
+                    .btn-icon {
+                        margin-left: 8px;
+                    }
+                }
+            }
         }
     }
 }
