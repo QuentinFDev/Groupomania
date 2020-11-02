@@ -18,6 +18,7 @@
             </ul>
             <router-view/>
         </div>
+        <div class="newPostFloat" @click="newPost()">+</div>
     </div>
 </template>
 
@@ -64,7 +65,27 @@ $clrecriture : #fd2f04;
 $clrlogos : #d1515a;
 $clrtextsearch : #928f8f;
 
-
+.newPostFloat{
+    display: flex;
+    font-size: 110px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 99;
+    position: fixed;
+    left: 90vw;
+    top: 80vh;
+    width: 100px;
+    height: 100px;
+    background: $clrlogos;
+    border-radius: 100px;
+    &:hover{
+        scale: 0.95;
+    }
+    &:active{
+        scale: 0.9;
+    }
+}
 .header-bar{
     font-family: "nevis", "calibri", sans-serif;
     display: flex;
@@ -107,6 +128,7 @@ $clrtextsearch : #928f8f;
         color: #d1515a;
         cursor: pointer;
     }
+
 }
 
 .header-menu ul{
