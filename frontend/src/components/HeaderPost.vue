@@ -46,6 +46,13 @@ $clrtextsearch : #928f8f;
     }
     
 }
+@media screen and (max-width: 1000px){
+    .header-post{
+        h3{
+            font-size: 7vw;
+        }
+    }
+}
 
 @media screen and (max-width: 650px){
     .header-post{

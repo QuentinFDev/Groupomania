@@ -1,7 +1,9 @@
 <template>
     <div class="header-forum">
         <div class="header-bar">
-            <div class="rounduser"><p class="letteruser" v-bind="letteruser()">{{letterUser}}</p></div>
+            <div class="rounduser">
+                <p class="letteruser" v-bind="letteruser()">{{letterUser}}</p>
+            </div>
             <div class="logo">
                 <img src="../assets/iconwithoutbackground.png" alt="logo groupomania">
                 <h1>Groupomania</h1>
@@ -65,27 +67,6 @@ $clrecriture : #fd2f04;
 $clrlogos : #d1515a;
 $clrtextsearch : #928f8f;
 
-.newPostFloat{
-    display: flex;
-    font-size: 110px;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 99;
-    position: fixed;
-    left: 90vw;
-    top: 80vh;
-    width: 100px;
-    height: 100px;
-    background: $clrlogos;
-    border-radius: 100px;
-    &:hover{
-        scale: 0.95;
-    }
-    &:active{
-        scale: 0.9;
-    }
-}
 .header-bar{
     font-family: "nevis", "calibri", sans-serif;
     display: flex;
@@ -158,12 +139,51 @@ $clrtextsearch : #928f8f;
     }
 }
 
-@media screen and (max-width: 850px){
+.newPostFloat{
+    display: flex;
+    font-size: 110px;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 99;
+    position: fixed;
+    left: 90vw;
+    top: 80vh;
+    width: 100px;
+    height: 100px;
+    background: $clrlogos;
+    border-radius: 100px;
+    &:hover{
+        scale: 0.95;
+    }
+    &:active{
+        scale: 0.9;
+    }
+}
+
+@media screen and (max-width: 1350px){
+    .newPostFloat{
+        left: 85vw;
+    }
+}
+
+@media screen and (max-width: 1100px){
     .header-bar{
     height: 15vw;
+        .logo{
+            img{
+                display: none;
+            }
+            h1{
+                font-size: 7vw;
+            }
+        }
         .rounduser{
             width: 10vw;
             height: 10vw;
+            .letteruser{
+                font-size: 6vw;
+            }
         }
         .menu-burger .fa-4x{
             scale: 0.8;
@@ -171,16 +191,12 @@ $clrtextsearch : #928f8f;
     }
 }
 
-@media screen and (max-width: 700px) {
-    .header-bar .logo{
-        img{
-            display: none;
-        }
-        h1{
-            font-size: 7vw;
-        }
-    } 
+@media screen and (max-width: 870px){
+    .newPostFloat{
+        left: 80vw;
+    }
 }
+
 @media screen and (max-width: 550px){
     .header-bar{
         .rounduser{
@@ -190,6 +206,15 @@ $clrtextsearch : #928f8f;
         .menu-burger .fa-4x{
             scale: 0.8;
         }
+    }
+    .newPostFloat{
+        left: 75vw;
+    }
+}
+
+@media screen and (max-width: 450px){
+    .newPostFloat{
+        left: 70vw;
     }
 }
 
