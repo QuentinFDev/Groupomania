@@ -14,8 +14,8 @@ router.post('/', auth, multer, (req, res, next) => {
         const postData = {
             post: req.body.form,
             created: today,
-            createdby: req.body.createdby,
-            userId: req.body.userId,
+            createdby: req.user.firstname + ' ' + req.user.lastname,
+            userId: req.user.userId,
             letterUserPost: req.body.letterUserPost,
             imageUrl : "null",
         }
@@ -27,8 +27,8 @@ router.post('/', auth, multer, (req, res, next) => {
         const postData = {
             post: req.body.form,
             created: today,
-            createdby: req.body.createdby,
-            userId: req.body.userId,
+            createdby: req.user.firstname + ' ' + req.user.lastname,
+            userId: req.user.userId,
             letterUserPost: req.body.letterUserPost,
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         }
@@ -106,7 +106,8 @@ router.get("/", auth, (req, res, next) => {
                 exclude : ['password', 'email']
             }
         }
-    ]})
+        ], order: [ [ 'created', 'DESC' ]]
+    })
         .then(posts => res.status(200).json(posts))
         .catch(error => res.status(400).json({error}))
     } catch (error) {

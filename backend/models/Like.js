@@ -15,7 +15,9 @@ module.exports = db.sequelize.define(
         userName: {
           	type: Sequelize.STRING
         },
-        
+        userId: {
+            type: Sequelize.NUMBER
+        }
     },
     {
         timestamps: false

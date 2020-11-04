@@ -7,7 +7,8 @@ const auth = require('../middleware/auth')
 router.post('/likes/:id', auth, (req, res) => {
 	const likeData = {
 		postId: req.params.id,
-		userName : req.body.userName
+		userName : req.user.firstname + ' ' + req.user.lastname,
+		userId : req.user.userId
 	}
 	Like.create(likeData)
 	.then(() => res.status(201).json({message: "Like enregistré !", data: likeData}))

@@ -88,7 +88,7 @@
                             </ul>
                         </button>
                     </div>
-                    <div class="share">
+                    <div class="share" @click="share(post)">
                         <button class="btn-share">
                             <span class="btn-text">Partager</span>
                             <span class="btn-icon">
@@ -178,6 +178,10 @@
     </div>
 </template>
 
+<!------------------------------------------------------------------------------------------------------------------------------>
+<!-----------------------------------------------------SCRIPT------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------>
+
 
 <script>
 import Vue from 'vue'
@@ -213,7 +217,7 @@ export default {
                 this.showComments[element.id] = false
             });
             this.posts = posts.data
-            //console.log(posts.data);
+            console.log(posts.data);
             //console.log(this.showComments);
         },
         //Poster un commentaire
@@ -320,12 +324,32 @@ export default {
             this.showLikes[post.id] = !this.showLikes[post.id]
             this.showLikes = JSON.parse(JSON.stringify(this.showLikes))
         },
+        //mettre dans le presse papier
+        copyToClipboard(str){
+                const el = document.createElement('textarea');
+                el.value = str;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            },
+        //partager le post
+        share(post){
+            this.copyToClipboard(post.post)
+            alert('Le Post a été copié dans le presse papier !')
+        },
     },
     mounted(){
         this.fetchPosts()
     },
 }
 </script>
+
+
+<!------------------------------------------------------------------------------------------------------------------------------>
+<!-----------------------------------------------------CSS---------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------>
+
 
 <style scoped lang="scss">
 
