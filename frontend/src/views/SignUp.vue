@@ -70,12 +70,10 @@ export default {
                             console.log("result", result.data.error);
                         }
                         else{
-                            console.log(result.data);
                             alert("Inscription réalisée avec succès")
                             this.$router.push('/')
                         }
                     })
-                console.log(this.sign);
             }
         e.preventDefault();
     },

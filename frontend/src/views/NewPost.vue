@@ -29,23 +29,17 @@ export default {
             newpost:{
                 form:null,
                 file : "",
-                createdby: localStorage.getItem("Name"),
-                userId : localStorage.getItem('UserId'),
-                letterUserPost: localStorage.getItem("Name").substr(0, 1)
             }
         }
     },
     methods:{
         selectFile() {
-            console.log(this.$refs.file.files[0]);
+            //console.log(this.$refs.file.files[0]);
             this.newpost.file = this.$refs.file.files[0]  
         },
         postForm(e){
             let formData = new FormData()
             formData.append('form', this.newpost.form)
-            formData.append('createdby', this.newpost.createdby)
-            formData.append('userId', this.newpost.userId)
-            formData.append('letterUserPost', this.newpost.letterUserPost)
             formData.append('file', this.newpost.file)
             if(this.newpost.form != null){
                 this.axios.post('http://localhost:5000/posts', formData, {headers:
@@ -66,7 +60,7 @@ export default {
             else{
                 alert("Vous n'aviez rien écris !")
             }
-        console.log(this.newpost);
+        //console.log(this.newpost);
         e.preventDefault();
         },
     }

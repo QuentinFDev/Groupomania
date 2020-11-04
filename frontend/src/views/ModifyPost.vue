@@ -4,8 +4,8 @@
         <form id="post-form" @submit="postForm">
             <div class="form-group">
                 <textarea class="form-control" :placeholder="post.post" id="description" v-model="post.post"></textarea>
-                <label for="file" class="label">selectionner une image</label>
-                <input type="file" accept="image/*" ref="file" @change="selectFile"/>
+                <label for="file" >Télécharger une image: </label>
+                <input class="inputFile" type="file" accept="image/*" ref="file" @change="selectFile"/>
             </div>
             <button class="submit" type="submit">Publier</button>
         </form>
@@ -46,7 +46,7 @@ export default {
             }
         },
         selectFile() {
-            console.log(this.$refs.file.files[0]);
+            //console.log(this.$refs.file.files[0]);
             this.post.file = this.$refs.file.files[0]  
         },
         postForm(e){
@@ -72,7 +72,7 @@ export default {
             else{
                 alert("Vous n'aviez rien écris !")
             }
-        console.log(this.newpost);
+        //console.log(this.newpost);
         e.preventDefault();
         },
     },
@@ -107,6 +107,23 @@ $clrtextsearch : #928f8f;
             font-size: 1.5vw;
             font-family: Calibri, 'Trebuchet MS', sans-serif;
             padding: 1%;
+        }
+         label{
+            margin: 2%;
+            color: white;
+            font-size: 1.5vw;
+        }
+        input[type=file]::file-selector-button {
+            border: 2px solid $clrprimaire;
+            padding: .2em .4em;
+            border-radius: .2em;
+            background-color: $clrlogos;
+            transition: 1s;
+            color: white;
+            }
+        input[type=file]::file-selector-button:hover {
+            background-color: $clrprimaire;
+            border: 2px solid $clrlogos;
         }
     }
     .submit{

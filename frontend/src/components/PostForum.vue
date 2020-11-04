@@ -9,7 +9,7 @@
                         <p>{{post.created}}</p>
                     </div>
                 </div>
-                <div class="options" v-if="post.createdby == userName">
+                <div class="options" v-if="post.userId == userId">
                     <button class="btn modifyPost" @click="modifyPost(post)">Modifier</button>
                     <button class="btn removePost" @click="removePost(post)">Supprimer</button>
                 </div>
@@ -88,7 +88,7 @@
                             </ul>
                         </button>
                     </div>
-                    <div class="share">
+                    <div class="share" @click="share(post)">
                         <button class="btn-share">
                             <span class="btn-text">Partager</span>
                             <span class="btn-icon">
@@ -177,6 +177,10 @@
         </div>
     </div>
 </template>
+
+<!------------------------------------------------------------------------------------------------------------------------------>
+<!-----------------------------------------------------SCRIPT------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------>
 
 
 <script>
@@ -320,12 +324,32 @@ export default {
             this.showLikes[post.id] = !this.showLikes[post.id]
             this.showLikes = JSON.parse(JSON.stringify(this.showLikes))
         },
+        //mettre dans le presse papier
+        copyToClipboard(str){
+                const el = document.createElement('textarea');
+                el.value = str;
+                document.body.appendChild(el);
+                el.select();
+                document.execCommand('copy');
+                document.body.removeChild(el);
+            },
+        //partager le post
+        share(post){
+            this.copyToClipboard(post.post)
+            alert('Le Post a été copié dans le presse papier !')
+        },
     },
     mounted(){
         this.fetchPosts()
     },
 }
 </script>
+
+
+<!------------------------------------------------------------------------------------------------------------------------------>
+<!-----------------------------------------------------CSS---------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------------------------------------>
+
 
 <style scoped lang="scss">
 

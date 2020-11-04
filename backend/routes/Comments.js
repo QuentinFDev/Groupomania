@@ -9,7 +9,7 @@ router.post('/comments', auth, (req, res) => {
     const commentData = {
       comment: req.body.content,
       created: today,
-      createdby: req.body.name,
+      createdby: req.user.firstname + ' ' + req.user.lastname,
       postId: req.body.postId
     }
     Comment.create(commentData)
@@ -36,12 +36,5 @@ router.delete('/comments/:id',auth, (req, res, next) => {
   .then(() => res.status(201).json({message: "Commentaires supprimés !"}))
   .catch( error => res.status(400).json({error}))
 })
-
-router.get("/comments", auth, (req, res, next) => {
-  Comment.findAll()
-    .then(comments => res.status(200).json(comments))
-    .catch(error => res.status(400).json({error}))
-})
-
 
 module.exports = router

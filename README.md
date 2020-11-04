@@ -15,6 +15,9 @@
 
 ### Application sur le localhost:8080
 
-### Si besoin: parametrer une base de données MySQL pour l'utilisation de l'application
-
+## Paramètres de la base de données
+### 1) Installer et ouvrir WAMP Serveur avec PHPMyAdmin
+#### 2) Ouvrir le serveur my SQL avec nom d'utilisateur : 'root' et Mot de passe : ''(pas de mot de passe)
+##### a) créer une nouvelle base de données (ici: groupomaniausers) changer les valeurs dans le fichier backend/database/db.js au besoin
+###### - créer 4 tables: comments, likes, posts, users et respecter les modèles grâce au fichiers backend/models
 
