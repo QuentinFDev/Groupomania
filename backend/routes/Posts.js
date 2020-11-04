@@ -16,7 +16,7 @@ router.post('/', auth, multer, (req, res, next) => {
             created: today,
             createdby: req.user.firstname + ' ' + req.user.lastname,
             userId: req.user.userId,
-            letterUserPost: req.body.letterUserPost,
+            letterUserPost: req.user.firstname.substr(0, 1),
             imageUrl : "null",
         }
         Post.create(postData)
@@ -29,7 +29,7 @@ router.post('/', auth, multer, (req, res, next) => {
             created: today,
             createdby: req.user.firstname + ' ' + req.user.lastname,
             userId: req.user.userId,
-            letterUserPost: req.body.letterUserPost,
+            letterUserPost: req.user.firstname.substr(0, 1),
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         }
         Post.create(postData)

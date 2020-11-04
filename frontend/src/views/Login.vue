@@ -55,7 +55,7 @@ export default {
                             console.log("result", result.data.error);
                         }
                         else{
-                            console.log(result.data)
+                            //console.log(result.data)
                             //stocker les données de l'utilisateur
                             localStorage.setItem("Name", [result.data.userFirstName + ' ' + result.data.userLastName])
                             localStorage.setItem("UserId", result.data.userId)
@@ -63,7 +63,7 @@ export default {
                             this.$router.push('forum')
                         }
                     })
-                console.log(this.auth);
+                //console.log(this.auth);
             }       
         e.preventDefault();
     },

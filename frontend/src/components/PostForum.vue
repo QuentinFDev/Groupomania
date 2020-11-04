@@ -9,7 +9,7 @@
                         <p>{{post.created}}</p>
                     </div>
                 </div>
-                <div class="options" v-if="post.createdby == userName">
+                <div class="options" v-if="post.userId == userId">
                     <button class="btn modifyPost" @click="modifyPost(post)">Modifier</button>
                     <button class="btn removePost" @click="removePost(post)">Supprimer</button>
                 </div>
@@ -217,7 +217,7 @@ export default {
                 this.showComments[element.id] = false
             });
             this.posts = posts.data
-            console.log(posts.data);
+            //console.log(posts.data);
             //console.log(this.showComments);
         },
         //Poster un commentaire
