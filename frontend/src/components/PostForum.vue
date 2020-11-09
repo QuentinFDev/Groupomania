@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="post" v-for="post in posts.slice()" :key="post.id">
+        <div class="post" v-for="post in posts" :key="post.id">
             <div class="headerpost">
                 <div class="data-post">
                     <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
                     <div class="postdata">
-                        <h3>{{post.createdby}}</h3>
+                        <h3>{{post.createdby}} / Service: {{post.service}}</h3>
                         <p>{{post.created}}</p>
                     </div>
                 </div>
@@ -297,7 +297,7 @@ export default {
                     like = 1
                 }
             }
-            if(like != 1) {
+            if(like == 0) {
                 await axios.post(`http://localhost:5000/posts/likes/${post.id}`, {
                     like: 1
                 }, {
@@ -321,6 +321,7 @@ export default {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
                 })
+                alert('Vous n\'aimez plus ce post !')
                 location.reload()
             }
         },

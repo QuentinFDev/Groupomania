@@ -9,6 +9,7 @@ const fs = require('fs')
 //Création de post
 router.post('/', auth, multer, (req, res, next) => {
     const today = new Date()
+    console.log(req.user.service);
     //Si il y a une image
     if(!req.file) {
         const postData = {
@@ -29,6 +30,7 @@ router.post('/', auth, multer, (req, res, next) => {
             created: today,
             createdby: req.user.firstname + ' ' + req.user.lastname,
             userId: req.user.userId,
+            service: req.user.service,
             letterUserPost: req.user.firstname.substr(0, 1),
             imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
         }

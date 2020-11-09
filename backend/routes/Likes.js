@@ -4,7 +4,6 @@ const router = express.Router()
 const auth = require('../middleware/auth')
 
 router.post('/likes/:id', auth, (req, res) => {
-	console.log(req.body.like);
 	if(req.body.like == 1 ){
 		const likeData = {
 			postId: req.params.id,
