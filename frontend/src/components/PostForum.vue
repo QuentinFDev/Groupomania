@@ -46,7 +46,7 @@
                             <div class="oneLike" v-for="like in post.likes" :key="like.postId">
                                 <p><b>{{like.userName}}</b> aime ce post</p>
                                 <div v-if="like.userName == userName">
-                                    <button class="btn removeLike" @click="removeLike(like)">J'aime plus</button>
+                                    <button class="btn removeLike" @click="removeLike(post)">J'aime plus</button>
                                 </div>
                             </div>
                             <button class="button" @click="showLikes[post.id] = false">Fermer</button>
@@ -57,7 +57,7 @@
             <div class="footerpost">
                 <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
                 <div class="btns-reacts">
-                     <div class="like" @click="onLike(post.id)">
+                    <div class="like" @click="onLike(post)">
                         <button class="btn-like">
                             <span class="btn-text">J'aime</span>
                             <span class="btn-icon">
@@ -73,7 +73,7 @@
                             </span>
                             <ul class="social-icons">
                                 <li>
-                                    <a href="#">
+                                    <a>
                                         <svg 
                                         class="icon" 
                                         height="30" 
@@ -201,8 +201,8 @@ export default {
             likesopen : false,
             showComments : {},
             showLikes : {},
-            like: false,
-            dislike: true
+            likeActive: true,
+            dislikeActive: false
         }
     },
     methods : {
@@ -288,30 +288,51 @@ export default {
             location.reload()
         },
         //Liker un post
-        async onLike(postId) {
-            await axios.post(`http://localhost:5000/posts/likes/${postId}`, {
-                postId : postId,
-                userName: localStorage.getItem('Name'),
-            }, {
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('token')
+        async onLike(post) {
+            var likesArray = post.likes
+            var name = localStorage.getItem('Name')
+            var like = 0
+            for(var i=0; i<likesArray.length; i++) {
+                if(name === likesArray[i].userName){
+                    like = 1
                 }
-            })
-            this.posts = this.posts.map(element => {
-                if(element.id == postId) {
+            }
+            if(like != 1) {
+                await axios.post(`http://localhost:5000/posts/likes/${post.id}`, {
+                    like: 1
+                }, {
+                    headers: {
+                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                this.posts = this.posts.map(element => {
+                if(element.id === post.id) {
                     element.likes.push({
                         userName: localStorage.getItem('Name')
                     })
                 }
                 return element
             })
+            } else {
+                await axios.post(`http://localhost:5000/posts/likes/${post.id}`, {
+                    like: 0
+                }, {
+                    headers: {
+                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                location.reload()
+            }
         },
         //supprimer un like
         async removeLike(post) {
-            await axios.delete(`http://localhost:5000/posts/like/${post.id}`, {headers:
-                {
+            await axios.post(`http://localhost:5000/posts/likes/${post.id}`, {
+                like: 0
+            }, {
+                headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('token')
-                }})
+                }
+            })
             location.reload()
         },
         //afficher la fenetre des commentaires
