@@ -17,11 +17,13 @@
   box-sizing: none;
 }
 
+
 body{
   background-image:url(./assets/batgroupomaniamax.jpg);
   background-repeat:no-repeat;
   height: 100vh;
 }
+
 
 .fontawesome-i2svg-active{
   background: #091f43;
