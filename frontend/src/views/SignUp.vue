@@ -66,13 +66,16 @@ export default {
             if (!this.errors.length) {
                 this.axios.post('http://localhost:5000/users/register', this.sign)
                     .then((result) =>{
-                        if(result.data.error !=undefined) {
+                        if(result.data.error != undefined) {
                             console.log("result", result.data.error);
                         }
                         else{
                             alert("Inscription réalisée avec succès")
                             this.$router.push('/')
                         }
+                    })
+                    .catch(() => {
+                        alert("utilisateur déjà existant !");
                     })
             }
         e.preventDefault();

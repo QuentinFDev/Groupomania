@@ -1,14 +1,10 @@
 <template>
-<div class="home">
-    <headerauth/>
-    <transition name="view">
+  <div class="home">
+      <headerauth/>
       <router-link to="/login" class="btn">Connexion</router-link>
-    </transition>
-    <transition name="view">
       <router-link to="/signup" class="btn">Inscription</router-link>
-    </transition>
-    <router-view />
-</div>
+        <router-view/>
+  </div>
 </template>
 
 <script>
@@ -59,4 +55,5 @@ $clrbtn: #d1515a;
     color: $clrbtn;
   }
 }
+
 </style>

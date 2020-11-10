@@ -63,6 +63,9 @@ export default {
                             this.$router.push('forum')
                         }
                     })
+                    .catch(() => {
+                        alert('Identifiant incorrect !')
+                    })
                 //console.log(this.auth);
             }       
         e.preventDefault();

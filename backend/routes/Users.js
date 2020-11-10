@@ -36,7 +36,7 @@ users.post('/register', (req, res) => {
             })
         })
       } else {
-        res.json({ error: 'Utilisateur déjà existant' })
+        res.status(400).json({ error: 'Utilisateur déjà existant' })
       }
     })
     .catch(err => {res.send('error 500: ' + err)
@@ -49,12 +49,12 @@ users.post('/login', (req, res) => {
   })
   .then(user => {
     if (!user) {
-      return res.status(401).json({error: 'Utilisateur non trouvé !'})
+      return res.status(400).json({error: 'Utilisateur non trouvé !'})
     }
     bcrypt.compare(req.body.password, user.password)
       .then(valid => {
         if (!valid) {
-          return res.status(401).json({error: 'Mot de passe incorrect !'})
+          return res.status(400).json({error: 'Mot de passe incorrect !'})
         }
         res.status(200).json({
           userFirstName: user.first_name,

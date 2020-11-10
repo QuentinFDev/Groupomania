@@ -1,11 +1,11 @@
 <template>
     <div>
-        <div class="post" v-for="post in posts" :key="post.id">
+        <div class="post" v-for="post in posts.slice()" :key="post.id">
             <div class="headerpost">
                 <div class="data-post">
                     <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
                     <div class="postdata">
-                        <h3>{{post.createdby}} / Service: {{post.service}}</h3>
+                        <h3>{{post.createdby}}</h3>
                         <p>{{post.created}}</p>
                     </div>
                 </div>
@@ -430,13 +430,13 @@ $clrfooterpost : #c4c4c4;
                 cursor: pointer;
                 padding: 10px 20px;
                 border-radius: 4px;
-                color: #FE4880;
+                color: $clrlogos;
                 font-size: 14px;
                 font-weight: 600;
                 margin: 0 15px;
                 transition: 0.4s;
-                border: 3px solid #FE4880;
-                background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
+                border: 3px solid $clrlogos;
+                background-image: linear-gradient(to right, transparent 50%, $clrlogos 50%);
                 background-size: 200%;
                 background-position: 0%;
                 &:hover{
@@ -485,7 +485,7 @@ $clrfooterpost : #c4c4c4;
             cursor: pointer;
             display: inline-block;
             padding: 15px 25px;
-            background-image: linear-gradient(to right, #CC2E5D, #FF5858);
+            background-image: linear-gradient(to right, #b93d45, $clrlogos);
             border-radius: 8px;
             color: #FFF;
             font-size: 18px;
@@ -540,12 +540,12 @@ $clrfooterpost : #c4c4c4;
                     cursor: pointer;
                     padding: 10px 20px;
                     border-radius: 4px;
-                    color: #FE4880;
+                    color: $clrlogos;
                     font-size: 14px;
                     font-weight: 600;
                     transition: 0.4s;
-                    border: 3px solid #FE4880;
-                    background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
+                    border: 3px solid $clrlogos;
+                    background-image: linear-gradient(to right, transparent 50%, $clrlogos 50%);
                     background-size: 200%;
                     background-position: 0%;
                     &:hover{
@@ -565,12 +565,12 @@ $clrfooterpost : #c4c4c4;
                 cursor: pointer;
                 padding: 10px 20px;
                 border-radius: 4px;
-                color: #FE4880;
+                color: $clrlogos;
                 font-size: 14px;
                 font-weight: 600;
                 transition: 0.4s;
-                border: 3px solid #FE4880;
-                background-image: linear-gradient(to right, transparent 50%, #FE4880 50%);
+                border: 3px solid $clrlogos;
+                background-image: linear-gradient(to right, transparent 50%, $clrlogos 50%);
                 background-size: 200%;
                 background-position: 0%;
                 &:hover{
