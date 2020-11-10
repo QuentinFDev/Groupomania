@@ -52,6 +52,7 @@ export default {
                         'Authorization' : 'Bearer ' + localStorage.getItem('token')
                     }
                 })
+                localStorage.clear()
                 this.$router.push('/')
         },
         logout(){

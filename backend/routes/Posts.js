@@ -44,16 +44,20 @@ router.post('/', auth, multer, (req, res, next) => {
 router.delete('/:id', auth, (req, res, next) => {
     Post.findByPk(req.params.id)
         .then((post) => {
-            const filename = post.imageUrl.split('/images/')[1]
-            fs.unlink(`images/${filename}`, () => {
-                Post.destroy({
-                    where: {
-                        id : req.params.id
-                    }
+            if(post.userId == req.user.userId || req.user.userAdmin == true) {
+                const filename = post.imageUrl.split('/images/')[1]
+                fs.unlink(`images/${filename}`, () => {
+                    Post.destroy({
+                        where: {
+                            id : req.params.id
+                        }
+                    })
+                    .then(() => res.status(201).json({message: "Post supprimé !"}))
+                    .catch( error => res.status(400).json({error}))
                 })
-                .then(() => res.status(201).json({message: "Post supprimé !"}))
-                .catch( error => res.status(400).json({error}))
-            })
+            } else {
+                return error
+            }
         })
         .catch(error => res.status(500).json({error}))
 })
@@ -63,36 +67,40 @@ router.put('/:id', auth, multer, (req, res, next) => {
     const today = new Date()
     Post.findByPk(req.params.id)
         .then((post) => {
-            const filename = post.imageUrl.split('/images/')[1]
-            fs.unlink(`images/${filename}`, () => {
-                //Si il n'y a pas image
-                if(!req.file) {
-                    Post.update({
-                        post: req.body.post,
-                        created: today,
-                        imageUrl : "null",
-                    },{
-                        where: {
-                            id : req.params.id
+            if(post.userId == req.user.userId || req.user.userAdmin == true) {
+                const filename = post.imageUrl.split('/images/')[1]
+                    fs.unlink(`images/${filename}`, () => {
+                        //Si il n'y a pas image
+                        if(!req.file) {
+                            Post.update({
+                                post: req.body.post,
+                                created: today,
+                                imageUrl : "null",
+                            },{
+                                where: {
+                                    id : req.params.id
+                                }
+                            })
+                            .then(() => res.status(201).json({message: "Post Modifié !"}))
+                            .catch( error => res.status(400).json({error}))
+                        } else {
+                            //Si il y a une image
+                            Post.update({ 
+                                post: req.body.post,
+                                created: today,
+                                imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+                            },{
+                                where: {
+                                    id : req.params.id
+                                }
+                            })
+                            .then(() => res.status(201).json({message: "Post Modifié !"}))
+                            .catch( error => res.status(400).json({error}))
                         }
                     })
-                    .then(() => res.status(201).json({message: "Post Modifié !"}))
-                    .catch( error => res.status(400).json({error}))
-                } else {
-                    //Si il y a une image
-                    Post.update({ 
-                        post: req.body.post,
-                        created: today,
-                        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-                    },{
-                        where: {
-                            id : req.params.id
-                        }
-                    })
-                    .then(() => res.status(201).json({message: "Post Modifié !"}))
-                    .catch( error => res.status(400).json({error}))
-                }
-            })
+            } else {
+                return error
+            }
         })
         .catch(error => res.status(500).json({error}))
 })
