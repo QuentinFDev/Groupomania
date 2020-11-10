@@ -60,6 +60,9 @@ export default {
                             localStorage.setItem("Name", [result.data.userFirstName + ' ' + result.data.userLastName])
                             localStorage.setItem("UserId", result.data.userId)
                             localStorage.setItem("token", result.data.token)
+                            if(result.data.userAdmin === true){
+                                localStorage.setItem("Admin", result.data.userAdmin)
+                            }
                             this.$router.push('forum')
                         }
                     })

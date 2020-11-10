@@ -9,7 +9,7 @@
                         <p>{{post.created}}</p>
                     </div>
                 </div>
-                <div class="options" v-if="post.userId == userId">
+                <div class="options" v-if="post.userId == userId || admin == 'true'">
                     <button class="btn modifyPost" @click="modifyPost(post)">Modifier</button>
                     <button class="btn removePost" @click="removePost(post)">Supprimer</button>
                 </div>
@@ -28,7 +28,7 @@
                         <div class="comments" v-if="showComments[post.id]">
                             <div class="oneComment" v-for="comment in post.comments" :key="comment.postId">
                                 <p><b>({{comment.created}}) {{comment.createdby}} a dit : </b>{{comment.comment}}</p>
-                                <div v-if="comment.createdby == userName">
+                                <div v-if="comment.createdby == userName || admin == 'true'">
                                     <button class="btn removeComment" @click="removeComment(comment)">Supprimer</button>
                                 </div>
                             </div>
@@ -197,6 +197,7 @@ export default {
             comment: {},
             userId: localStorage.getItem('UserId'),
             userName: localStorage.getItem('Name'),
+            admin: localStorage.getItem('Admin'),
             commentsopen : false,
             likesopen : false,
             showComments : {},
@@ -219,6 +220,7 @@ export default {
             this.posts = posts.data
             //console.log(posts.data);
             //console.log(this.showComments);
+            console.log(localStorage.getItem('Admin'));
         },
         //Poster un commentaire
         async fetchComment(postId, e){

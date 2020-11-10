@@ -30,6 +30,10 @@ module.exports = db.sequelize.define(
       type: Sequelize.STRING,
       required: true
     },
+    admin: {
+      type: Sequelize.BOOLEAN,
+      required: true
+    },
     created: {
       type: Sequelize.DATE,
       defaultValue: Sequelize.NOW

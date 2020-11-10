@@ -15,7 +15,7 @@
         <div class="header-menu">
             <ul class="menu" v-bind:class="{'open':menuopen}">
                 <li @click="newPost()">Nouveau Post</li>
-                <li @click="myAcount()">Mon compte</li>
+                <li @click="myAcount()">Mon compte (supprimer mon compte)</li>
                 <li @click="logout()">Deconnexion</li>
             </ul>
             <router-view/>
@@ -25,33 +25,44 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import axios from 'axios'
+import Vueaxios from 'vue-axios'
+Vue.use(Vueaxios, axios)
+
 export default {
-  name: 'HeaderForum',
-  data() {
-    return {
+    name: 'HeaderForum',
+    data() {
+        return {
         menuopen:false,
         letterUser: null
     }
-  },
-  methods:{
-      menu(){
-          this.menuopen=!this.menuopen
-      },
-      newPost(){
-          this.$router.push('/post')
-      },
-      myAcount(){
-          this.$router.push('#')
-      },
-      logout(){
-          localStorage.clear()
-          this.$router.push('/')
-      },
-      letteruser(){
-          const name = localStorage.getItem('Name')
-          this.letterUser = name.substr(0, 1)
-      }
-  },
+},
+    methods:{
+        menu(){
+            this.menuopen=!this.menuopen
+        },
+        newPost(){
+            this.$router.push('/post')
+        },
+        async myAcount(){
+            await axios.delete(`http://localhost:5000/users`,
+                {
+                    headers: {
+                        'Authorization' : 'Bearer ' + localStorage.getItem('token')
+                    }
+                })
+                this.$router.push('/')
+        },
+        logout(){
+            localStorage.clear()
+            this.$router.push('/')
+        },
+        letteruser(){
+            const name = localStorage.getItem('Name')
+            this.letterUser = name.substr(0, 1)
+        }
+    },
 }
 </script>
 

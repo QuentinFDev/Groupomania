@@ -1,3 +1,3 @@
 npm install
 cd backend
-nodemon server dev
+nodemon serve dev
