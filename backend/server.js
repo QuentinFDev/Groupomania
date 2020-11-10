@@ -21,7 +21,7 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS')
     next()
 });
-
+/*
 app.use(express.json({ limit: '10kb' })); // Body limit is 10
 const limit = rateLimit({
     windowMs: 60 * 60 * 1000, // 1 Hour
@@ -29,7 +29,7 @@ const limit = rateLimit({
     message: 'Too many requests' // message to send
 });
 app.use(limit); //apply to  all requests
-
+*/
 
 var Users = require ('./routes/Users')
 app.use("/users", Users)

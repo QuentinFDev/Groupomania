@@ -3,6 +3,7 @@ const users = express.Router()
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+const auth = require('../middleware/auth')
 
 const User = require('../models/User')
 users.use(cors())
@@ -17,6 +18,7 @@ users.post('/register', (req, res) => {
     email: req.body.email,
     password: req.body.password,
     service: req.body.service,
+    admin: 0,
     created: today
   }
   console.log(req.body);
@@ -60,6 +62,7 @@ users.post('/login', (req, res) => {
           userFirstName: user.first_name,
           userLastName: user.last_name,
           userId: user.id,
+          userAdmin: user.admin,
           token: jwt.sign(
             {userId: user.id, firstname: user.first_name, lastname: user.last_name, service: user.service}, process.env.SECRET_KEY, { expiresIn: '24H'}
           ),
@@ -68,6 +71,16 @@ users.post('/login', (req, res) => {
       .catch(error => res.status(500).json({ error }))
   })
   .catch(error => res.status(500).json({ error }))
+})
+
+users.delete('/', auth, (req, res) => {
+  User.destroy({
+    where: {
+      id : req.user.userId
+    }
+  })
+  .then(() => res.status(201).json({message: "Utilisateur supprimé !"}))
+  .catch( error => res.status(400).json({error}))
 })
 
 module.exports = users
