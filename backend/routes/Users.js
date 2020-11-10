@@ -64,7 +64,7 @@ users.post('/login', (req, res) => {
           userId: user.id,
           userAdmin: user.admin,
           token: jwt.sign(
-            {userId: user.id, firstname: user.first_name, lastname: user.last_name, service: user.service}, process.env.SECRET_KEY, { expiresIn: '24H'}
+            {userId: user.id, firstname: user.first_name, lastname: user.last_name, service: user.service, userAdmin: user.admin}, process.env.SECRET_KEY, { expiresIn: '24H'}
           ),
         })
       })

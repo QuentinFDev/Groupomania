@@ -274,7 +274,7 @@ export default {
         },
         //Modifier un post
        async modifyPost(post) {
-           if(post.userId == localStorage.getItem('UserId')) {
+           if(post.userId == localStorage.getItem('UserId') || localStorage.getItem('Admin') == 'true') {
                 this.$router.push(`/modifyPost?post=${post.id}`)
            }
            else {

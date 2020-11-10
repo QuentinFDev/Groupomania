@@ -39,7 +39,7 @@ export default {
                 'Authorization' : 'Bearer ' + localStorage.getItem('token'),
                 'Name' : localStorage.getItem('Name')
             }})
-            if(post.data.userId == localStorage.getItem('UserId')) {
+            if(post.data.userId == localStorage.getItem('UserId') || localStorage.getItem('Admin') == 'true') {
                 this.post = post.data
             } else {
                 this.$router.push('forum')
