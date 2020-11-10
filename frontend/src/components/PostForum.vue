@@ -220,7 +220,6 @@ export default {
             this.posts = posts.data
             //console.log(posts.data);
             //console.log(this.showComments);
-            console.log(localStorage.getItem('Admin'));
         },
         //Poster un commentaire
         async fetchComment(postId, e){
