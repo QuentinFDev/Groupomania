@@ -1,6 +1,6 @@
 <template>
     <div class="header-post">
-        <router-link to="/forum"><i class="fas fa-angle-double-left fa-4x"></i></router-link>
+        <router-link to="/forum" aria-label="retour au forum"><i class="fas fa-angle-double-left fa-4x"></i></router-link>
         <h3>Créer une publication</h3>
         <router-view/>
     </div>

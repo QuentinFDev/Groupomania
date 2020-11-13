@@ -9,11 +9,11 @@
                 <li v-for="error in errors" :key="error">{{ error }}</li>
             </ul>
         </h5>
-        <input class="input_field" type="text" placeholder="prenom" id="firstname" name="firstname" v-model="sign.firstname"/>
-        <input class="input_field" type="text" placeholder="nom" id="lastname" name="lastname" v-model="sign.lastname"/>
-        <input class="input_field" type="text" placeholder="service" id="service" name="service" v-model="sign.service"/>
-        <input class="input_field" type="email" placeholder="email" id="email" name="email" v-model="sign.email"/>
-        <input class="input_field" type="password" placeholder="mot de passe" id="password" name="password" v-model="sign.password"/>
+        <input class="input_field" aria-label="prénom" type="text" placeholder="prenom" id="firstname" name="firstname" v-model="sign.firstname"/>
+        <input class="input_field" aria-label="nom de famille" type="text" placeholder="nom" id="lastname" name="lastname" v-model="sign.lastname"/>
+        <input class="input_field" aria-label="service" type="text" placeholder="service" id="service" name="service" v-model="sign.service"/>
+        <input class="input_field" aria-label="email" type="email" placeholder="email" id="email" name="email" v-model="sign.email"/>
+        <input class="input_field" aria-label="mot de passe" type="password" placeholder="mot de passe" id="password" name="password" v-model="sign.password"/>
         <button type="submit" value="submit">Envoyer</button>
     </form>
     <router-view/>
@@ -124,7 +124,6 @@ $clrbtn: #d1515a;
         margin: 0 auto 30px auto;
         display: flex;
         flex-direction: column;
-
     }
     [type="text"], [type="email"], [type="password"]{
             width: 90%;
@@ -164,4 +163,10 @@ $clrbtn: #d1515a;
             }
         }
     }
+
+@media screen and (max-width: 1000px){
+    .body{
+        background: $clrprimaire
+    }
+}
 </style>

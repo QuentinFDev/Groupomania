@@ -3,9 +3,8 @@
         <headerpost/>
         <form id="post-form" @submit="postForm">
             <div class="form-group">
-                <textarea class="form-control" placeholder="Ecrivez-ici..." id="description" v-model="newpost.form"></textarea>
-                <label for="file" >Télécharger une image: </label>
-                <input class="inputFile" type="file" accept="image/*" ref="file" @change="selectFile"/>
+                <textarea class="form-control" aria-label="Ecrivez votre post" placeholder="Ecrivez-ici..." id="description" v-model="newpost.form"></textarea>
+                <input class="inputFile" aria-label="télécharger une image" type="file" accept="image/*" ref="file" @change="selectFile"/>
             </div>
             <button class="submit" type="submit">Publier</button>
         </form>
@@ -92,11 +91,6 @@ $clrtextsearch : #928f8f;
             font-size: 1.5vw;
             font-family: Calibri, 'Trebuchet MS', sans-serif;
             padding: 1%;
-        }
-        label{
-            margin: 2%;
-            color: white;
-            font-size: 1.5vw;
         }
         input[type=file]::file-selector-button {
             border: 2px solid $clrprimaire;
