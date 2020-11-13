@@ -5,7 +5,7 @@
                 <div class="data-post">
                     <div class="userpost"><p class="letteruser">{{post.letterUserPost}}</p></div>
                     <div class="postdata">
-                        <h3>{{post.createdby}}</h3>
+                        <h2>{{post.createdby}}</h2>
                         <p>{{post.created}}</p>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="footerpost">
-                <input class="comment" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
+                <input class="comment" aria-label="inserer un commentaire" type="text" placeholder="Ecrire un commentaire..." id="comment" name="comment" v-model="comment[post.id]" @keypress="fetchComment(post.id, $event)"/>
                 <div class="btns-reacts">
                     <div class="like" @click="onLike(post)">
                         <button class="btn-like">
@@ -111,7 +111,7 @@
                             </span>
                             <ul class="social-icons">
                                 <li>
-                                <a href="https://twitter.com/" target="_blank">
+                                <a href="https://twitter.com/" target="_blank" aria-label="twitter">
                                 <svg
                                     t="1580195676506"
                                     class="icon"
@@ -130,8 +130,8 @@
                                 ></a>
                                 </li>
                                 <li>
-                                <a href="https://www.facebook.com/" target="_blank"
-                                    ><svg 
+                                <a href="https://www.facebook.com/" target="_blank" aria-label="facebook">
+                                <svg 
                                     version="1.1" 
                                     id="Capa_1" 
                                     xmlns="http://www.w3.org/2000/svg" 
@@ -151,8 +151,8 @@
                                 ></a>
                                 </li>
                                 <li>
-                                <a href="https://github.com/QuentinFDev/Groupomania" target="_blank"
-                                    ><svg
+                                <a href="https://github.com/QuentinFDev/Groupomania" target="_blank" aria-label="github">
+                                <svg
                                     t="1580195767061"
                                     class="icon"
                                     viewBox="0 0 1024 1024"
@@ -463,7 +463,7 @@ $clrfooterpost : #c4c4c4;
             max-width: 96%;
             max-height: auto;
         }
-        h3 i{
+        h2 i{
             font-size: 1.5vw;
             cursor: pointer;
             color: blue;

@@ -9,8 +9,8 @@
                 <li v-for="error in errors" :key="error">{{ error }}</li>
             </ul>
         </h5>
-        <input class="input_field" type="email" placeholder="email" id="email" name="email" v-model="auth.email"/>
-        <input class="input_field" type="password" placeholder="mot de passe" id="password" name="password" v-model="auth.password"/>
+        <input class="input_field" aria-label="email" type="email" placeholder="email" id="email" name="email" v-model="auth.email"/>
+        <input class="input_field" aria-label="mot de passe" type="password" placeholder="mot de passe" id="password" name="password" v-model="auth.password"/>
        <button type="submit">Envoyer</button>
     </form>
     <router-view/>
@@ -156,4 +156,10 @@ $clrbtn: #d1515a;
             }
         }
     }
+
+@media screen and (max-width: 1000px){
+    .body{
+        background: $clrprimaire
+    }
+}
 </style>
