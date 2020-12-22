@@ -5,6 +5,7 @@ var app = express()
 const path = require('path')
 const rateLimit = require ('express-rate-limit');
 var port = process.env.PORT || 5000
+var helmet = require('helmet')
 
 
 app.use(bodyParser.json())
@@ -22,6 +23,8 @@ app.use((req, res, next) => {
     next()
 });
 
+app.use(helmet())
+app.disable('x-powered-by')
 
 app.use(express.json({ limit: '10kb' })); // Body limit is 10
 const limit = rateLimit({
